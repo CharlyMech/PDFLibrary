@@ -1,0 +1,163 @@
+# CAT: Software general
+https://openlibra.com/es/collection/search/type/book/books_criteria/top/category/software-general/
+	40
+
+# CAT: Software Libre
+https://openlibra.com/es/collection/search/type/book/books_criteria/top/category/libros_software_libre/
+	227
+
+# CAT: Libros Programación
+https://openlibra.com/es/collection/search/type/book/books_criteria/top/category/libros_programacion/
+	985
+
+# CAT: SEO y SEM
+https://openlibra.com/es/collection/search/type/book/books_criteria/top/category/seo_y_sem/
+	15
+
+# CAT: Robótica
+https://openlibra.com/es/collection/search/type/book/books_criteria/top/category/robotica/
+	33
+
+# CAT: Redes y SysAdmin
+https://openlibra.com/es/collection/search/type/book/books_criteria/top/category/redes_y_sysadmins/
+	56
+
+# CAT: Metodologías Hábiles
+https://openlibra.com/es/collection/search/type/book/books_criteria/top/category/metodologias_agiles/
+	46
+
+# CAT: Electrónica
+https://openlibra.com/es/collection/search/type/book/books_criteria/top/category/electronica-biblioteca/
+	43
+
+# CAT: Desarrollo Web
+https://openlibra.com/es/collection/search/type/book/books_criteria/top/category/desarrollo_web/
+	72
+
+# CAT: Bases de Datos
+https://openlibra.com/es/collection/search/type/book/books_criteria/top/category/bases_de_datos/
+	54
+
+#! Ojo cuidado mirar que no se repitan los ISBN
+
+
+
+## LIBROS ESCOGIDOS ##
+
+# Libros sobre programación e informática#
+https://openlibra.com/es/book/the-official-raspberry-pi-beginners-guide
+https://openlibra.com/es/book/the-official-raspberry-pi-projects-book-vol4
+https://openlibra.com/es/book/fundamentals-of-c-programming
+https://openlibra.com/es/book/paradigms-of-artificial-intelligence-programming-case-studies-in-common-lisp
+https://openlibra.com/es/book/kotlin-notes-for-professionals
+https://openlibra.com/es/book/javascript-notes-for-professional
+https://openlibra.com/es/book/spring-framework-notes-for-professionals
+https://openlibra.com/es/book/java-notes-for-professionals
+https://openlibra.com/es/book/php-notes-for-professionals
+https://openlibra.com/es/book/eloquent-javascript-3rd-edition
+https://openlibra.com/es/book/python-notes-for-professionals
+https://openlibra.com/es/book/c-hackers-guide
+https://openlibra.com/es/book/desarrollo-de-videojuegos-un-enfoque-practico-vol-1-arquitectura-del-motor
+https://openlibra.com/es/book/desarrollo-de-videojuegos-un-enfoque-practico-vol-2-programacion-grafica
+https://openlibra.com/es/book/desarrollo-de-videojuegos-un-enfoque-practico-vol-3-tecnicas-avanzadas
+https://openlibra.com/es/book/desarrollo-de-videojuegos-un-enfoque-practico-vol-4-desarrollo-de-componentes
+https://openlibra.com/es/book/gui-design-for-android-apps
+https://openlibra.com/es/book/edicion-de-textos-cientificos-latex-2014
+https://openlibra.com/es/book/python-para-principiantes
+https://openlibra.com/es/book/programador-php-tomo-1
+https://openlibra.com/es/book/basicos-arduino
+https://openlibra.com/es/book/linux-notes-for-professionals
+https://openlibra.com/es/book/latex-notes-for-professionals
+https://openlibra.com/es/book/tras-instalar-debian-8-jessie
+https://openlibra.com/es/book/the-linux-command-line-fourth-internet-edition
+https://openlibra.com/es/book/the-linux-command-line-third-internet-edition
+https://openlibra.com/es/book/the-linux-command-line-2
+https://openlibra.com/es/book/pro-git-2nd-edition
+https://openlibra.com/es/book/git-notes-for-professionals
+https://openlibra.com/es/book/git-fundamentos
+https://openlibra.com/es/book/git-from-bottom-to-up
+https://openlibra.com/es/book/git-community-book
+https://openlibra.com/es/book/sql-notes-for-professionals
+https://openlibra.com/es/book/mongodb-notes-for-professionals
+https://openlibra.com/es/book/mysql-notes-for-professionals
+https://openlibra.com/es/book/postgresql-database-administration-volume-1
+https://openlibra.com/es/book/database-design-2nd-edition-2
+https://openlibra.com/es/book/bigger-than-you-big-data-and-obesity
+https://openlibra.com/es/book/big-data-retos-y-oportunidades
+https://openlibra.com/es/book/database-design-2nd-edition
+https://openlibra.com/es/book/an-introduction-to-data-science
+https://openlibra.com/es/book/mongodb-en-espanol-t1-el-principio
+https://openlibra.com/es/book/manual-curso-basico-de-postgresql
+https://openlibra.com/es/book/sql-injection
+https://openlibra.com/es/book/laboratorio-de-php-y-mysql
+https://openlibra.com/es/book/apuntes-basicos-de-sql
+https://openlibra.com/es/book/manual-de-supervivencia-del-administrador-de-mysql
+https://openlibra.com/es/book/bases-de-datos
+https://openlibra.com/es/book/the-little-mongodb-book
+https://openlibra.com/es/book/mysql-tutorial
+https://openlibra.com/es/book/postgresql-9-0-4-documentation
+https://openlibra.com/es/book/react-js-notes-for-professionals
+https://openlibra.com/es/book/css-notes-for-professionals
+https://openlibra.com/es/book/html5-notes-for-professionals
+https://openlibra.com/es/book/diseno-web
+https://openlibra.com/es/book/typescript-language-specification
+https://openlibra.com/es/book/guia-completa-de-css3
+https://openlibra.com/es/book/up-to-speed-on-html5-css3
+https://openlibra.com/es/book/introduccion-a-xhtml
+https://openlibra.com/es/book/eloquent-javascript
+https://openlibra.com/es/book/software-testing-primer-v2
+https://openlibra.com/es/book/aplicacion-para-la-gestion-de-proyectos-agiles-con-scrum
+https://openlibra.com/es/book/agile-processes-in-software-engineering-and-extreme-programming
+https://openlibra.com/es/book/scrum-manager-guia-de-formacion
+https://openlibra.com/es/book/a-software-testing-primer
+https://openlibra.com/es/book/informacion-basica-de-scrum-the-scrum-primer
+https://openlibra.com/es/book/scrum-manager-en-busca-de-la-excelencia-del-codigo
+https://openlibra.com/es/book/no-bugs
+https://openlibra.com/es/book/the-agile-samurai
+https://openlibra.com/es/book/computational-physics-with-python
+https://openlibra.com/es/book/ethical-artificial-intelligence
+https://openlibra.com/es/book/compiler-design-in-c
+https://openlibra.com/es/book/go-bootcamp
+https://openlibra.com/es/book/secure-ruby-development-guide
+https://openlibra.com/es/book/four-days-on-rails
+https://openlibra.com/es/book/notas-de-introduccion-al-lenguaje-de-programacion-java
+https://openlibra.com/es/book/programacion-funcional-ed-fokker
+https://openlibra.com/es/book/programacion-orientada-a-objetos-en-java
+https://openlibra.com/es/book/arquitectura-de-aplicaciones-web
+https://openlibra.com/es/book/programacion-de-sockets
+https://openlibra.com/es/book/introduccion-a-la-programacion
+https://openlibra.com/es/book/introduccion-a-la-algoritmica
+https://openlibra.com/es/book/its-behind-you-the-making-of-a-computer-game
+https://openlibra.com/es/book/powershell-notes-for-professionals
+https://openlibra.com/es/book/algorithms-notes-for-professionals
+https://openlibra.com/es/book/bash-notes-for-professionals
+https://openlibra.com/es/book/efficient-learning-machines
+https://openlibra.com/es/book/security-of-networks-and-services-in-an-all-connected-world
+https://openlibra.com/es/book/building-the-infrastructure-for-cloud-security
+https://openlibra.com/es/book/seguridad-en-unix-y-redes
+https://openlibra.com/es/book/enrutamiento-avanzado-y-control-de-trafico-en-linux
+https://openlibra.com/es/book/the-ubunutu-server-guide
+https://openlibra.com/es/book/wireless-cracking-desde-cero-con-backtrack
+https://openlibra.com/es/book/manipulacion-avanzada-de-paquetes-tcpip-con-scapy-parte-ii
+https://openlibra.com/es/book/manipulacion-avanzada-de-paquetes-tcpip-con-scapy-parte-i
+https://openlibra.com/es/book/administracion-de-sistemas-gnulinux
+https://openlibra.com/es/book/fundamentos-de-sistemas-gnulinux
+https://openlibra.com/es/book/servidores-windows
+https://openlibra.com/es/book/getting-started-with-ubuntu
+https://openlibra.com/es/book/analisis-de-seguridad-en-tcpip
+https://openlibra.com/es/book/computer-inside-your-computer-how-to-use-virtualbox
+https://openlibra.com/es/book/windows-powershell-cookbook
+https://openlibra.com/es/book/engineering-education-and-research-using-matlab
+https://openlibra.com/es/book/desarrollando-con-java-8-poker
+https://openlibra.com/es/book/a-primer-on-java-2nd-edition
+https://openlibra.com/es/book/practical-artifical-intelligence-programming-with-java
+https://openlibra.com/es/book/java-application-development-on-linux
+https://openlibra.com/es/book/aprendiendo-java-y-poo
+https://openlibra.com/es/book/data-structures-and-algorithm-analysis-java-version
+https://openlibra.com/es/book/building-iphone-apps-with-html-css-and-javascript
+https://openlibra.com/es/book/maven-the-complete-reference
+https://openlibra.com/es/book/manual-de-symfony2
+https://openlibra.com/es/book/jquery-fundamentals
+https://openlibra.com/es/book/introduccion-ajax
+
+# Otros libros destacables no relacionados con la informática #

@@ -36,6 +36,7 @@ public class Signin extends JFrame implements MouseListener, MouseMotionListener
 	private JLabel showConfirmPasswd; // Show Confirm Password JLabel for Icon
 	private ImageIcon closedEye;
 	private ImageIcon openedEye;
+	private JLabel passwdInfo;
 	private ImageIcon radioIcon = new ImageIcon("icons/LIGHT/radio_button.png");
 	private ImageIcon selectedRadioIcon = new ImageIcon("icons/LIGHT/radio_button_selected.png");
 	private ButtonGroup tiers = new ButtonGroup();
@@ -136,6 +137,14 @@ public class Signin extends JFrame implements MouseListener, MouseMotionListener
 		this.mail.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0xA6947D)));
 		this.mail.addMouseListener(this); // Add Mouse Listener -> Text focus
 		this.left.add(this.mail);
+
+		// Password Info JLabel
+		ImageIcon passwdInfoIcon = new ImageIcon("icons/LIGHT/password_info.png");
+		this.passwdInfo = new JLabel(passwdInfoIcon);
+		this.passwdInfo.setBounds(30, 390, 20, 20);
+		this.passwdInfo.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		this.passwdInfo.addMouseListener(this);
+		this.left.add(this.passwdInfo);
 
 		// Password JLabel
 		this.passwd = new JPasswordField();
@@ -294,6 +303,12 @@ public class Signin extends JFrame implements MouseListener, MouseMotionListener
 		if (e.getSource() == this.goLogin) {
 			this.dispose();
 			new Login();
+		}
+
+		// Password Info Event
+		if (e.getSource() == this.passwdInfo) {
+			JOptionPane.showMessageDialog(null,
+					"Password must have a lenth of 8 to 32 characters and contain at least:\n\t- 1 Capital letter (A-Z)\n\t- 1 Number (0-9)\n\t- 1 Special character (.*!@#-,$^+=)");
 		}
 
 		// Inputs Text Events
@@ -534,6 +549,7 @@ public class Signin extends JFrame implements MouseListener, MouseMotionListener
 
 		// Log In Button event
 		if (e.getSource() == this.signin) {
+			// Some fields are not filled
 			if (this.name.getText().isEmpty() || this.surname.getText().isEmpty() || this.mail.getText().isEmpty()
 					|| String.valueOf(this.passwd.getPassword()).isEmpty()
 					|| String.valueOf(this.confirmPasswd.getPassword()).isEmpty()
@@ -541,41 +557,20 @@ public class Signin extends JFrame implements MouseListener, MouseMotionListener
 					|| this.mail.getText().equalsIgnoreCase("Enter your mail here")
 					|| String.valueOf(this.passwd.getPassword()).equalsIgnoreCase("Your Password")
 					|| String.valueOf(this.confirmPasswd.getPassword()).equalsIgnoreCase("Your Password")) {
-
-				JOptionPane.showMessageDialog(null, "All fields must be filled!", "Sign In Failed",
+				JOptionPane.showMessageDialog(null, "All fields must be filled.\nTry again!", "Sign In Failed",
 						JOptionPane.WARNING_MESSAGE);
-
-				this.name.setText("Name");
-				this.name.setBackground(new Color(0xEFE5D5));
-				this.name.setForeground(new Color(0xA6947D));
-				this.name.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0xA6947D)));
-				this.name.setOpaque(true);
-
-				this.surname.setText("Surname");
-				this.surname.setBackground(new Color(0xEFE5D5));
-				this.surname.setForeground(new Color(0xA6947D));
-				this.surname.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0xA6947D)));
-				this.surname.setOpaque(true);
-
-				this.mail.setText("Enter your mail here");
-				this.mail.setBackground(new Color(0xEFE5D5));
-				this.mail.setForeground(new Color(0xA6947D));
-				this.mail.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0xA6947D)));
-				this.mail.setOpaque(true);
-
-				this.passwd.setText("Your Password");
-				this.passwd.setBackground(new Color(0xEFE5D5));
-				this.passwd.setForeground(new Color(0xA6947D));
-				this.passwd.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0xA6947D)));
-				this.passwd.setOpaque(true);
-
-				this.confirmPasswd.setText("Your Password");
-				this.confirmPasswd.setBackground(new Color(0xEFE5D5));
-				this.confirmPasswd.setForeground(new Color(0xA6947D));
-				this.confirmPasswd.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0xA6947D)));
-				this.confirmPasswd.setOpaque(true);
+			} else if (!App.checkMail(this.mail.getText())) {
+				JOptionPane.showMessageDialog(null, "Your mail is not valid.\nTry again!", "Sign In Failed",
+						JOptionPane.WARNING_MESSAGE);
+			} else if (!App.checkPasswd(String.valueOf(this.passwd.getPassword()))) {
+				JOptionPane.showMessageDialog(null, "Your password is not valid.\nTry again!", "Sign In Failed",
+						JOptionPane.WARNING_MESSAGE);
+			} else if (!String.valueOf(this.passwd.getPassword())
+					.equals(String.valueOf(this.confirmPasswd.getPassword()))) {
+				JOptionPane.showMessageDialog(null, "Your password do not match.\nTry again!", "Sign In Failed",
+						JOptionPane.WARNING_MESSAGE);
 			} else {
-				// TODO -> Backend authentication
+				// TODO -> Check with DB
 				System.out.print(
 						"User Data:\n\tName: " + this.name.getText() + "\n\tSurname: " + this.surname.getText() + "\n\tMail: "
 								+ this.mail.getText() + "\n\tPassword 1: "
@@ -585,6 +580,36 @@ public class Signin extends JFrame implements MouseListener, MouseMotionListener
 				this.dispose();
 				new Library();
 			}
+
+			this.name.setText("Name");
+			this.name.setBackground(new Color(0xEFE5D5));
+			this.name.setForeground(new Color(0xA6947D));
+			this.name.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0xA6947D)));
+			this.name.setOpaque(true);
+
+			this.surname.setText("Surname");
+			this.surname.setBackground(new Color(0xEFE5D5));
+			this.surname.setForeground(new Color(0xA6947D));
+			this.surname.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0xA6947D)));
+			this.surname.setOpaque(true);
+
+			this.mail.setText("Enter your mail here");
+			this.mail.setBackground(new Color(0xEFE5D5));
+			this.mail.setForeground(new Color(0xA6947D));
+			this.mail.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0xA6947D)));
+			this.mail.setOpaque(true);
+
+			this.passwd.setText("Your Password");
+			this.passwd.setBackground(new Color(0xEFE5D5));
+			this.passwd.setForeground(new Color(0xA6947D));
+			this.passwd.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0xA6947D)));
+			this.passwd.setOpaque(true);
+
+			this.confirmPasswd.setText("Your Password");
+			this.confirmPasswd.setBackground(new Color(0xEFE5D5));
+			this.confirmPasswd.setForeground(new Color(0xA6947D));
+			this.confirmPasswd.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0xA6947D)));
+			this.confirmPasswd.setOpaque(true);
 		}
 	}
 

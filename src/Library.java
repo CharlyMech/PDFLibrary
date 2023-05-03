@@ -2,15 +2,14 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Frame;
-import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -33,30 +32,13 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 	private ImageIcon userPressedIcon;
 	private JPanel main;
 	private JTextField search;
-	private JLabel searchBy;
-	private ImageIcon searchByIcon;
-	private ImageIcon searchByPressedIcon;
-	private ImageIcon searchByActiveIcon;
-	private JPanel searchByDropdown;
-	private boolean searchByFlag = false; // Default value -> False means that is closed (filters are hidden)
-	private JLabel searchByTitle;
-	private JLabel searchByTitleIcon;
-	private JLabel searchByTitleActiveIcon;
-	private JLabel searchByAuthor;
-	private JLabel searchByAuthorIcon;
-	private JLabel searchByAuthorActiveIcon;
-	private JLabel searchByPublisher;
-	private JLabel searchByPublisherIcon;
-	private JLabel searchByPublisherActiveIcon;
-	private JLabel searchByLanguage;
-	private JLabel searchByLanguageIcon;
-	private JLabel searchByLanguageActiveIcon;
-	private JLabel searchByCategory;
-	private JLabel searchByCategoryIcon;
-	private JLabel searchByCategoryActiveIcon;
+	private JComboBox searchBy;
 	private JLabel searchButton;
 	private ImageIcon searchButtonIcon;
 	private ImageIcon searchButtonPressedIcon;
+	private JLabel myLibrary;
+	private ImageIcon myLibraryIcon;
+	private ImageIcon myLibraryIconPressed;
 	private int xMouse; // Get mouse X coordinate for mouse events
 	private int yMouse; // Get mouse Y coordinate for mouse events
 
@@ -158,7 +140,8 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		this.main = new JPanel();
 		this.main.setBounds(0, 80, 1200, 720);
 		this.main.setLayout(null);
-		this.main.setBackground(new Color(0, 0, 0, 0));
+		this.main.setBackground(new Color(0xEFE5D5));
+		this.main.setOpaque(true);
 
 		// Search Text Field
 		this.search = new JTextField();
@@ -172,30 +155,14 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		this.search.addMouseListener(this);
 		this.main.add(this.search);
 
-		// Search By Dropdown
-		this.searchByIcon = new ImageIcon("icons/LIGHT/search.png");
-		this.searchByPressedIcon = new ImageIcon("icons/LIGHT/search_pressed.png");
-		this.searchByActiveIcon = new ImageIcon("icons/LIGHT/search_active.png");
-
-		this.searchBy = new JLabel(this.searchByIcon);
+		// Search By JComboBox
+		String[] searchByItems = { "Title", "Category", "Author", "Year" };
+		this.searchBy = new JComboBox<String>(searchByItems);
 		this.searchBy.setBounds(775, 35, 135, 50);
-		this.searchBy.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		this.searchBy.addMouseListener(this);
+		this.searchBy.setBackground(new Color(0xA2845E));
+		this.searchBy.setForeground(new Color(0x232323));
+		this.searchBy.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(0xA6947D)));
 		this.main.add(this.searchBy);
-
-		ImageIcon searchByShadowIcon = new ImageIcon("icons/LIGHT/search_shadow.png");
-		JLabel searchByShadow = new JLabel(searchByShadowIcon);
-		searchByShadow.setBounds(775, 35, 135, 50);
-		this.main.add(searchByShadow);
-
-		// Search By DropDown Panel
-		this.searchByDropdown = new JPanel();
-		this.searchByDropdown.setLayout(new GridLayout(5, 1));
-		this.searchByDropdown.setBounds(775, 85, 135, 150);
-		// this.searchByDropdown.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(0xA6947D)));
-		this.searchByDropdown.setBackground(new Color(0, 0, 0, 0));
-		this.searchByDropdown.setVisible(true);
-		this.main.add(this.searchByDropdown);
 
 		// Search Button
 		this.searchButtonIcon = new ImageIcon("icons/LIGHT/searchButton.png");
@@ -210,6 +177,31 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		JLabel searchButtonShadow = new JLabel(searchButtonShadowIcon);
 		searchButtonShadow.setBounds(925, 35, 50, 50);
 		this.main.add(searchButtonShadow);
+
+		// - SLIDER PANEL
+		JPanel sliderPanel = new JPanel();
+		sliderPanel.setBounds(800, 120, 400, 600);
+		sliderPanel.setLayout(null); // Set Layout manager to null
+		sliderPanel.setBackground(new Color(0xFFFFFF));
+
+		// My Library Button
+		this.myLibraryIcon = new ImageIcon("icons/LIGHT/my_library.png");
+		this.myLibraryIconPressed = new ImageIcon("icons/LIGHT/my_library_pressed.png");
+		this.myLibrary = new JLabel();
+		this.myLibrary.setIcon(this.myLibraryIcon);
+		this.myLibrary.setBounds(122, 23, 175, 55);
+		this.myLibrary.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		this.myLibrary.addMouseListener(this);
+		sliderPanel.add(myLibrary);
+
+		ImageIcon myLibraryShadowIcon = new ImageIcon("icons/LIGHT/my_library_shadow.png");
+		JLabel myLibraryShadow = new JLabel(myLibraryShadowIcon);
+		myLibraryShadow.setBounds(122, 23, 175, 55);
+		sliderPanel.add(myLibraryShadow);
+
+		// - SLIDER PANEL
+
+		this.main.add(sliderPanel);
 
 		// - MAIN PANEL
 
@@ -246,7 +238,11 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		// Detect if the user has clicked outside the searchbar & it's not empty -> return colors to default
 		// TODO -> Implement click outside search bar (also on login&signin) return to placeholder styles
 
-		// Search By Clicked -> Set Filter Visibility TRUE/FALSE depending on current state
+		// Search Button Clicked -> Get Search By item filter
+		if (e.getSource() == this.searchButton) { // TEST
+			String searchFilter = String.valueOf(this.searchBy.getSelectedItem());
+			System.out.println(searchFilter);
+		}
 	}
 
 	@Override
@@ -275,16 +271,16 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 			this.repaint();
 		}
 
-		// Search By Hover
-		if (e.getSource() == this.searchBy) {
-			this.searchBy.setBounds(780, 30, 135, 50);
-			this.repaint();
-		}
-
 		// Search Button Hover
 		if (e.getSource() == this.searchButton) {
 			this.searchButton.setBounds(930, 30, 50, 50);
 			this.repaint();
+		}
+
+		// My Library Button Hover
+		if (e.getSource() == this.myLibrary) {
+			this.myLibrary.setBounds(127, 18, 175, 55);
+			this.myLibrary.repaint();
 		}
 	}
 
@@ -318,18 +314,18 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 			this.repaint();
 		}
 
-		// Search By Exit Hover
-		if (e.getSource() == this.searchBy) {
-			this.searchBy.setBounds(775, 35, 135, 50);
-			this.searchBy.setIcon(this.searchByIcon);
-			this.repaint();
-		}
-
 		// Search Button Exit Hover
 		if (e.getSource() == this.searchButton) {
 			this.searchButton.setBounds(925, 35, 50, 50);
 			this.searchButton.setIcon(this.searchButtonIcon);
 			this.repaint();
+		}
+
+		// My Library Button Exit Hover
+		if (e.getSource() == this.myLibrary) {
+			this.myLibrary.setBounds(122, 23, 175, 55);
+			this.myLibrary.setIcon(this.myLibraryIcon);
+			this.myLibrary.repaint();
 		}
 	}
 
@@ -369,18 +365,18 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 			this.repaint();
 		}
 
-		// Search By Pressed
-		if (e.getSource() == this.searchBy) {
-			this.searchBy.setBounds(775, 35, 135, 50);
-			this.searchBy.setIcon(this.searchByPressedIcon);
-			this.repaint();
-		}
-
 		// Search Button Pressed
 		if (e.getSource() == this.searchButton) {
 			this.searchButton.setBounds(925, 35, 50, 50);
 			this.searchButton.setIcon(this.searchButtonPressedIcon);
 			this.repaint();
+		}
+
+		// My Library Button Pressed
+		if (e.getSource() == this.myLibrary) {
+			this.myLibrary.setBounds(122, 23, 175, 55);
+			this.myLibrary.setIcon(this.myLibraryIconPressed);
+			this.myLibrary.repaint();
 		}
 	}
 
@@ -414,18 +410,18 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 			this.repaint();
 		}
 
-		// Search By Released
-		if (e.getSource() == this.searchBy) {
-			this.searchBy.setBounds(775, 35, 135, 50);
-			this.searchBy.setIcon(this.searchByIcon);
-			this.repaint();
-		}
-
 		// Search Button Pressed
 		if (e.getSource() == this.searchButton) {
 			this.searchButton.setBounds(925, 35, 50, 50);
 			this.searchButton.setIcon(this.searchButtonIcon);
 			this.repaint();
+		}
+
+		// My Library Button Released
+		if (e.getSource() == this.myLibrary) {
+			this.myLibrary.setBounds(122, 23, 175, 55);
+			this.myLibrary.setIcon(this.myLibraryIcon);
+			this.myLibrary.repaint();
 		}
 	}
 
@@ -460,18 +456,18 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 			this.repaint();
 		}
 
-		// In case the user tries to drag on search by
-		if (e.getSource() == this.searchBy) {
-			this.searchBy.setBounds(775, 35, 135, 50);
-			this.searchBy.setIcon(this.searchByIcon);
-			this.repaint();
-		}
-
 		// In case the user tries to drag on search button
 		if (e.getSource() == this.searchButton) {
 			this.searchButton.setBounds(925, 35, 50, 50);
-			this.searchButton.setIcon(this.searchButtonPressedIcon);
+			this.searchButton.setIcon(this.searchButtonIcon);
 			this.repaint();
+		}
+
+		// In case the user tries to drag on my library button
+		if (e.getSource() == this.myLibrary) {
+			this.myLibrary.setBounds(122, 23, 175, 55);
+			this.myLibrary.setIcon(this.myLibraryIcon);
+			this.myLibrary.repaint();
 		}
 
 		int x = e.getXOnScreen();

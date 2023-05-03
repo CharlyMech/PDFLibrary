@@ -203,31 +203,34 @@ public class Login extends JFrame implements MouseListener, MouseMotionListener 
 
 		// Log In Button event
 		if (e.getSource() == this.login) {
-			if (this.mail.getText().isEmpty() || String.valueOf(this.passwd.getPassword()).isEmpty()
-					|| this.mail.getText().equalsIgnoreCase("Enter your mail here")
-					|| String.valueOf(this.passwd.getPassword()).equalsIgnoreCase("Your Password")) {
-
-				JOptionPane.showMessageDialog(null, "Your mail or password are not correct. Try again!", "Log In Failed",
+			// Empty or default text mail&password
+			if (this.mail.getText().equalsIgnoreCase("Enter your mail here")
+					|| String.valueOf(this.passwd.getPassword()).equalsIgnoreCase("Your Password") ||
+					this.mail.getText().isEmpty() || String.valueOf(this.passwd.getPassword()).isEmpty()) { // Default text case
+				JOptionPane.showMessageDialog(null, "All fields must be filled.\nTry again!", "Log In Failed",
 						JOptionPane.WARNING_MESSAGE);
-
-				this.mail.setText("Enter your mail here");
-				this.mail.setBackground(new Color(0xEFE5D5));
-				this.mail.setForeground(new Color(0xA6947D));
-				this.mail.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0xA6947D)));
-				this.mail.setOpaque(true);
-
-				this.passwd.setText("Your Password");
-				this.passwd.setBackground(new Color(0xEFE5D5));
-				this.passwd.setForeground(new Color(0xA6947D));
-				this.passwd.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0xA6947D)));
-				this.passwd.setOpaque(true);
+			} else if (!App.checkMail(this.mail.getText())) {
+				JOptionPane.showMessageDialog(null, "Your mail is not valid.\nTry again!", "Log In Failed",
+						JOptionPane.WARNING_MESSAGE);
 			} else {
-				// TODO -> Backend authentication
+				// TODO -> Check with DB
 				System.out.print("User Data:\n\tMail: " + this.mail.getText() + "\n\tPassword: "
 						+ String.valueOf(this.passwd.getPassword()));
 				this.dispose();
 				new Library();
 			}
+
+			this.mail.setText("Enter your mail here");
+			this.mail.setBackground(new Color(0xEFE5D5));
+			this.mail.setForeground(new Color(0xA6947D));
+			this.mail.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0xA6947D)));
+			this.mail.setOpaque(true);
+
+			this.passwd.setText("Your Password");
+			this.passwd.setBackground(new Color(0xEFE5D5));
+			this.passwd.setForeground(new Color(0xA6947D));
+			this.passwd.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0xA6947D)));
+			this.passwd.setOpaque(true);
 		}
 
 		// Go Sign In Window
@@ -239,7 +242,7 @@ public class Login extends JFrame implements MouseListener, MouseMotionListener 
 		// Input Text events 
 		if (e.getSource() == this.mail) {
 			// Mail
-			if (this.mail.getText().equals("Enter your mail here")) {
+			if (this.mail.getText().equalsIgnoreCase("Enter your mail here")) {
 				this.mail.setText("");
 				this.mail.setBackground(new Color(0xE9C8A7));
 				this.mail.setForeground(new Color(0x2E2E2E));
@@ -268,7 +271,7 @@ public class Login extends JFrame implements MouseListener, MouseMotionListener 
 			}
 
 			// Password
-			if (String.valueOf(this.passwd.getPassword()).equals("Your Password")) {
+			if (String.valueOf(this.passwd.getPassword()).equalsIgnoreCase("Your Password")) {
 				this.passwd.setText("");
 				this.passwd.setBackground(new Color(0xE9C8A7));
 				this.passwd.setForeground(new Color(0x2E2E2E));

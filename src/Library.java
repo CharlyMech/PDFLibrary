@@ -25,9 +25,11 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 	private ImageIcon minimizeIcon;
 	private ImageIcon minimizePressedIcon;
 	private JLabel settings;
+	protected static boolean settingsFlag = false;
 	private ImageIcon settingsIcon;
 	private ImageIcon settingsPressedIcon;
 	private JLabel user;
+	protected static boolean userFlag = false;
 	private ImageIcon userIcon;
 	private ImageIcon userPressedIcon;
 	private JPanel main;
@@ -39,6 +41,9 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 	private JLabel myLibrary;
 	private ImageIcon myLibraryIcon;
 	private ImageIcon myLibraryIconPressed;
+	private JLabel randomBook;
+	private ImageIcon randomBookIcon;
+	private ImageIcon randomBookIconPressed;
 	private int xMouse; // Get mouse X coordinate for mouse events
 	private int yMouse; // Get mouse Y coordinate for mouse events
 
@@ -182,7 +187,7 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		JPanel sliderPanel = new JPanel();
 		sliderPanel.setBounds(800, 120, 400, 600);
 		sliderPanel.setLayout(null); // Set Layout manager to null
-		sliderPanel.setBackground(new Color(0xFFFFFF));
+		sliderPanel.setBackground(new Color(0, 0, 0, 0));
 
 		// My Library Button
 		this.myLibraryIcon = new ImageIcon("icons/LIGHT/my_library.png");
@@ -198,6 +203,34 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		JLabel myLibraryShadow = new JLabel(myLibraryShadowIcon);
 		myLibraryShadow.setBounds(122, 23, 175, 55);
 		sliderPanel.add(myLibraryShadow);
+
+		// RANDOM BOOK PANEL -
+		JPanel randomBookPanel = new JPanel();
+		randomBookPanel.setBounds(40, 100, 320, 400);
+		randomBookPanel.setLayout(null); // Set Layout manager to null
+
+		ImageIcon randomBookBGIcon = new ImageIcon("icons/LIGHT/book_frame_320x400.png");
+		JLabel randomBookBG = new JLabel(randomBookBGIcon);
+		randomBookBG.setBounds(0, 0, 320, 400);
+		randomBookPanel.add(randomBookBG);
+
+		// - RANDOM BOOK PANEL
+		sliderPanel.add(randomBookPanel);
+
+		// Random book button
+		this.randomBookIcon = new ImageIcon("icons/LIGHT/refresh.png");
+		this.randomBookIconPressed = new ImageIcon("icons/LIGHT/refresh_pressed.png");
+		this.randomBook = new JLabel();
+		this.randomBook.setIcon(this.randomBookIcon);
+		this.randomBook.setBounds(120, 520, 160, 55);
+		this.randomBook.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		this.randomBook.addMouseListener(this);
+		sliderPanel.add(this.randomBook);
+
+		ImageIcon randomBookShadowIcon = new ImageIcon("icons/LIGHT/refresh_shadow.png");
+		JLabel randomBookShadow = new JLabel(randomBookShadowIcon);
+		randomBookShadow.setBounds(120, 520, 160, 55);
+		sliderPanel.add(randomBookShadow);
 
 		// - SLIDER PANEL
 
@@ -225,6 +258,12 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		// Minimize Button event
 		if (e.getSource() == this.minimize) {
 			this.setState(Frame.ICONIFIED);
+		}
+
+		// Settings Button event
+		if (e.getSource() == this.settings && !Library.settingsFlag) {
+			Library.settingsFlag = true;
+			new Settings();
 		}
 
 		// Search Bar Clicked
@@ -280,7 +319,13 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		// My Library Button Hover
 		if (e.getSource() == this.myLibrary) {
 			this.myLibrary.setBounds(127, 18, 175, 55);
-			this.myLibrary.repaint();
+			this.repaint();
+		}
+
+		// Random Book Button Hover 
+		if (e.getSource() == this.randomBook) {
+			this.randomBook.setBounds(125, 515, 160, 55);
+			this.repaint();
 		}
 	}
 
@@ -325,7 +370,14 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		if (e.getSource() == this.myLibrary) {
 			this.myLibrary.setBounds(122, 23, 175, 55);
 			this.myLibrary.setIcon(this.myLibraryIcon);
-			this.myLibrary.repaint();
+			this.repaint();
+		}
+
+		// Random Book Button Exit Hover 
+		if (e.getSource() == this.randomBook) {
+			this.randomBook.setBounds(120, 520, 160, 55);
+			this.randomBook.setIcon(randomBookIcon);
+			this.repaint();
 		}
 	}
 
@@ -376,7 +428,14 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		if (e.getSource() == this.myLibrary) {
 			this.myLibrary.setBounds(122, 23, 175, 55);
 			this.myLibrary.setIcon(this.myLibraryIconPressed);
-			this.myLibrary.repaint();
+			this.repaint();
+		}
+
+		// Random Book Button Pressed
+		if (e.getSource() == this.randomBook) {
+			this.randomBook.setBounds(120, 520, 160, 55);
+			this.randomBook.setIcon(randomBookIconPressed);
+			this.repaint();
 		}
 	}
 
@@ -421,7 +480,14 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		if (e.getSource() == this.myLibrary) {
 			this.myLibrary.setBounds(122, 23, 175, 55);
 			this.myLibrary.setIcon(this.myLibraryIcon);
-			this.myLibrary.repaint();
+			this.repaint();
+		}
+
+		// Random Book Button Released
+		if (e.getSource() == this.randomBook) {
+			this.randomBook.setBounds(120, 520, 160, 55);
+			this.randomBook.setIcon(this.randomBookIcon);
+			this.repaint();
 		}
 	}
 
@@ -467,7 +533,14 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		if (e.getSource() == this.myLibrary) {
 			this.myLibrary.setBounds(122, 23, 175, 55);
 			this.myLibrary.setIcon(this.myLibraryIcon);
-			this.myLibrary.repaint();
+			this.repaint();
+		}
+
+		// In case the user tries to drag on random book
+		if (e.getSource() == this.randomBook) {
+			this.randomBook.setBounds(120, 520, 160, 55);
+			this.randomBook.setIcon(this.randomBookIcon);
+			this.repaint();
 		}
 
 		int x = e.getXOnScreen();

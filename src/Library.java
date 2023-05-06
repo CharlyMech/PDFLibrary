@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -17,6 +18,7 @@ import javax.swing.JTextField;
 
 public class Library extends JFrame implements MouseListener, MouseMotionListener {
 	// ATTRIBUTES
+	protected static ArrayList<JFrame> openedWindows = new ArrayList<JFrame>();
 	private JPanel topBar = new JPanel(); // Top Bar Panel -> Contains close button and Mouse Motion Listener to move window
 	private JLabel close;
 	private ImageIcon closeIcon;
@@ -49,6 +51,9 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 
 	// CONSTRUCTOR
 	public Library() {
+		// Add JFrame to Array
+		Library.openedWindows.add(this);
+
 		// Window -
 		this.setLayout(null); // No Layout Manager
 		this.setSize(1200, 800); // WIDTH - HEIGHT
@@ -247,6 +252,12 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		this.setVisible(true);
 	}
 
+	protected static void logout() {
+		for (JFrame j : Library.openedWindows) {
+			j.dispose();
+		}
+	}
+
 	// MOUSE LISTENER Methods
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -261,9 +272,15 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		}
 
 		// Settings Button event
+		if (e.getSource() == this.user && !Library.userFlag) {
+			Library.userFlag = true;
+			Library.openedWindows.add(new User());
+		}
+
+		// Settings Button event
 		if (e.getSource() == this.settings && !Library.settingsFlag) {
 			Library.settingsFlag = true;
-			new Settings();
+			Library.openedWindows.add(new Settings());
 		}
 
 		// Search Bar Clicked

@@ -212,6 +212,7 @@ public class Settings extends JFrame implements MouseListener, MouseMotionListen
 		// Close Button event
 		if (e.getSource() == this.close) {
 			Library.settingsFlag = false;
+			Library.openedWindows.remove(this);
 			this.dispose();
 		}
 	}

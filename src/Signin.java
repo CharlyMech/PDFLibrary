@@ -9,6 +9,9 @@ import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import database.Conn;
+import database.Query;
+
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -40,6 +43,7 @@ public class Signin extends JFrame implements MouseListener, MouseMotionListener
 	private ImageIcon radioIcon = new ImageIcon("icons/LIGHT/radio_button.png");
 	private ImageIcon selectedRadioIcon = new ImageIcon("icons/LIGHT/radio_button_selected.png");
 	private ButtonGroup tiers = new ButtonGroup();
+	private int radioValue = 1;
 	private JRadioButton free = new JRadioButton("Free Tier"); // Free Tier JRadioButton
 	private JRadioButton pro = new JRadioButton("Pro Tier"); // Pro Tier JRadioButton
 	private JRadioButton premium = new JRadioButton("Premium Tier"); // Premium Tier JRadioButton
@@ -308,7 +312,7 @@ public class Signin extends JFrame implements MouseListener, MouseMotionListener
 		// Password Info Event
 		if (e.getSource() == this.passwdInfo) {
 			JOptionPane.showMessageDialog(null,
-					"Password must have a lenth of 8 to 32 characters and contain at least:\n\t- 1 Capital letter (A-Z)\n\t- 1 Number (0-9)\n\t- 1 Special character (.*!@#-,$^+=)");
+					"Password must have a lenth of 8 to 64 characters and contain at least:\n\t- 1 Capital letter (A-Z)\n\t- 1 Number (0-9)\n\t- 1 Special character (!@#$%^&*)");
 		}
 
 		// Inputs Text Events
@@ -562,6 +566,15 @@ public class Signin extends JFrame implements MouseListener, MouseMotionListener
 			} else if (!App.checkMail(this.mail.getText())) {
 				JOptionPane.showMessageDialog(null, "Your mail is not valid.\nTry again!", "Sign In Failed",
 						JOptionPane.WARNING_MESSAGE);
+			} else if (Query.checkMailDB(getName())) {
+				int reply = JOptionPane.showConfirmDialog(null, "This mail is alredy registered\nDo you want to Log In?",
+						"Sign In Failed",
+						JOptionPane.YES_NO_OPTION);
+
+				if (reply == JOptionPane.YES_OPTION) {
+					new Signin();
+					this.dispose();
+				}
 			} else if (!App.checkPasswd(String.valueOf(this.passwd.getPassword()))) {
 				JOptionPane.showMessageDialog(null, "Your password is not valid.\nTry again!", "Sign In Failed",
 						JOptionPane.WARNING_MESSAGE);
@@ -570,15 +583,19 @@ public class Signin extends JFrame implements MouseListener, MouseMotionListener
 				JOptionPane.showMessageDialog(null, "Your password do not match.\nTry again!", "Sign In Failed",
 						JOptionPane.WARNING_MESSAGE);
 			} else {
-				// TODO -> Check with DB
-				System.out.print(
-						"User Data:\n\tName: " + this.name.getText() + "\n\tSurname: " + this.surname.getText() + "\n\tMail: "
-								+ this.mail.getText() + "\n\tPassword 1: "
-								+ String.valueOf(this.passwd.getPassword())
-								+ "\n\tPassword 2: " + String.valueOf(this.confirmPasswd.getPassword()));
+				// Hash password
+				String hashPasswd = App.hashPassword(String.valueOf(this.passwd.getPassword()));
+				if (Query.createNewUser(this.name.getText(), this.surname.getText(), this.mail.getText(), hashPasswd,
+						this.radioValue)) {
+					int reply = JOptionPane.showConfirmDialog(null, "Account created Successfully!\nDo you want to Log In?",
+							"Sign In Completed!",
+							JOptionPane.YES_NO_OPTION);
 
-				this.dispose();
-				new Library();
+					if (reply == JOptionPane.YES_OPTION) {
+						new Library(Query.returnNewUserId());
+						this.dispose();
+					}
+				}
 			}
 
 			this.name.setText("Name");
@@ -751,16 +768,19 @@ public class Signin extends JFrame implements MouseListener, MouseMotionListener
 			this.pro.setIcon(this.radioIcon);
 			this.premium.setIcon(this.radioIcon);
 			this.repaint();
+			this.radioValue = 1;
 		}
 		if (e.getSource() == this.pro) {
 			this.free.setIcon(this.radioIcon);
 			this.premium.setIcon(this.radioIcon);
 			this.repaint();
+			this.radioValue = 2;
 		}
 		if (e.getSource() == this.premium) {
 			this.free.setIcon(this.radioIcon);
 			this.pro.setIcon(this.radioIcon);
 			this.repaint();
+			this.radioValue = 3;
 		}
 	}
 

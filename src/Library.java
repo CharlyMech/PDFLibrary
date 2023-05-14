@@ -16,8 +16,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import database.Conn;
+
 public class Library extends JFrame implements MouseListener, MouseMotionListener {
 	// ATTRIBUTES
+	protected int userId;
 	protected static ArrayList<JFrame> openedWindows = new ArrayList<JFrame>();
 	private JPanel topBar = new JPanel(); // Top Bar Panel -> Contains close button and Mouse Motion Listener to move window
 	private JLabel close;
@@ -50,7 +53,12 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 	private int yMouse; // Get mouse Y coordinate for mouse events
 
 	// CONSTRUCTOR
-	public Library() {
+	public Library(int user_id) {
+		// Store USER_ID value for session
+		this.userId = user_id;
+
+		System.out.println(this.userId);
+
 		// Add JFrame to Array
 		Library.openedWindows.add(this);
 
@@ -256,6 +264,7 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		for (JFrame j : Library.openedWindows) {
 			j.dispose();
 		}
+		Conn.closeConnection();
 	}
 
 	// MOUSE LISTENER Methods
@@ -263,7 +272,7 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 	public void mouseClicked(MouseEvent e) {
 		// Close Button event
 		if (e.getSource() == this.close) {
-			this.dispose();
+			Library.logout();
 		}
 
 		// Minimize Button event

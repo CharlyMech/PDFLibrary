@@ -6,6 +6,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import database.Conn;
+import database.Query;
+
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -199,6 +203,7 @@ public class Login extends JFrame implements MouseListener, MouseMotionListener 
 		// Close Button event
 		if (e.getSource() == this.close) {
 			this.dispose();
+			Conn.closeConnection();
 		}
 
 		// Log In Button event
@@ -208,16 +213,32 @@ public class Login extends JFrame implements MouseListener, MouseMotionListener 
 					|| String.valueOf(this.passwd.getPassword()).equalsIgnoreCase("Your Password") ||
 					this.mail.getText().isEmpty() || String.valueOf(this.passwd.getPassword()).isEmpty()) { // Default text case
 				JOptionPane.showMessageDialog(null, "All fields must be filled.\nTry again!", "Log In Failed",
-						JOptionPane.WARNING_MESSAGE);
+						JOptionPane.ERROR_MESSAGE);
 			} else if (!App.checkMail(this.mail.getText())) {
 				JOptionPane.showMessageDialog(null, "Your mail is not valid.\nTry again!", "Log In Failed",
-						JOptionPane.WARNING_MESSAGE);
+						JOptionPane.ERROR_MESSAGE);
+			} else if (!Query.checkMailDB(this.mail.getText())) {
+				int reply = JOptionPane.showConfirmDialog(null, "This mail is not registered\nDo you want to Sign In?",
+						"Log In Failed",
+						JOptionPane.YES_NO_OPTION);
+
+				if (reply == JOptionPane.YES_OPTION) {
+					new Signin();
+					this.dispose();
+				}
 			} else {
-				// TODO -> Check with DB
-				System.out.print("User Data:\n\tMail: " + this.mail.getText() + "\n\tPassword: "
-						+ String.valueOf(this.passwd.getPassword()));
-				this.dispose();
-				new Library();
+				if (Query.checkLogin(this.mail.getText(), App.hashPassword(String.valueOf(this.passwd.getPassword())))) {
+					if (Query.returnUserIdfromMail(this.mail.getText()) == -1) {
+						JOptionPane.showMessageDialog(null, "Something went wrong in Log In.\nTry again!", "Log In Failed",
+								JOptionPane.ERROR_MESSAGE);
+					} else {
+						this.dispose();
+						new Library(Query.returnUserIdfromMail(this.mail.getText()));
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Mail or Password incorrect.\nTry again!",
+							"Login Failed", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 
 			this.mail.setText("Enter your mail here");

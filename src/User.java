@@ -3,6 +3,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import database.Conn;
+import database.Query;
+
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -13,6 +16,11 @@ import java.awt.event.MouseMotionListener;
 
 public class User extends JFrame implements MouseListener, MouseMotionListener {
 	// ATTRIBUTES
+	private int userId;
+	private String name;
+	private String surname;
+	private String mail;
+	private String tierName;
 	private JPanel topBar = new JPanel(); // Top Bar Panel -> Contains close button and Mouse Motion Listener to move window
 	private JLabel close;
 	private ImageIcon closeButton;
@@ -22,9 +30,6 @@ public class User extends JFrame implements MouseListener, MouseMotionListener {
 	private JLabel editUser;
 	private JLabel userMail;
 	private JLabel userTier;
-	private ImageIcon freeTierIcon;
-	private ImageIcon proTierIcon;
-	private ImageIcon premiumTierIcon;
 	private ImageIcon editUserIcon;
 	private ImageIcon editUserHoverIcon;
 	private JLabel booksAdded;
@@ -37,7 +42,13 @@ public class User extends JFrame implements MouseListener, MouseMotionListener {
 	private int yMouse; // Get mouse Y coordinate for mouse events
 
 	// CONSTRUCTOR
-	public User() {
+	public User(int user_id, String name, String surname, String mail, String tier_name) {
+		this.userId = user_id;
+		this.name = name;
+		this.surname = surname;
+		this.mail = mail;
+		this.tierName = tier_name;
+
 		// Window -
 		this.setLayout(null); // No Layout Manager
 		this.setSize(500, 510); // WIDTH - HEIGHT
@@ -104,7 +115,7 @@ public class User extends JFrame implements MouseListener, MouseMotionListener {
 		userInfo.add(userImage);
 
 		// User Name and Surname
-		this.userNameSurname = new JLabel("User Name Surname");
+		this.userNameSurname = new JLabel(this.name + " " + this.surname);
 		this.userNameSurname.setBounds(172, 55, 270, 30);
 		this.userNameSurname.setBackground(new Color(0, 0, 0, 0));
 		this.userNameSurname.setForeground(new Color(0x232323));
@@ -122,7 +133,7 @@ public class User extends JFrame implements MouseListener, MouseMotionListener {
 		userInfo.add(this.editUser);
 
 		// User Mail
-		this.userMail = new JLabel("user_mail@mail.com");
+		this.userMail = new JLabel(this.mail);
 		this.userMail.setBounds(175, 85, 270, 30);
 		this.userMail.setBackground(new Color(0, 0, 0, 0));
 		this.userMail.setForeground(new Color(0x8E765F));
@@ -130,14 +141,28 @@ public class User extends JFrame implements MouseListener, MouseMotionListener {
 		userInfo.add(this.userMail);
 
 		// User Tier
-		this.freeTierIcon = new ImageIcon("icons/free_tier_icon.png");
-		this.proTierIcon = new ImageIcon("icons/pro_tier_icon.png");
-		this.premiumTierIcon = new ImageIcon("icons/premium_tier_icon.png");
+		ImageIcon freeTierIcon = new ImageIcon("icons/free_tier_icon.png");
+		ImageIcon proTierIcon = new ImageIcon("icons/pro_tier_icon.png");
+		ImageIcon premiumTierIcon = new ImageIcon("icons/premium_tier_icon.png");
+
+		ImageIcon displayedTierIcon = new ImageIcon(freeTierIcon.getImage());
+
+		switch (this.tierName.toLowerCase()) {
+			case "free":
+				displayedTierIcon = new ImageIcon(freeTierIcon.getImage());
+				break;
+			case "pro":
+				displayedTierIcon = new ImageIcon(proTierIcon.getImage());
+				break;
+			case "premium":
+				displayedTierIcon = new ImageIcon(premiumTierIcon.getImage());
+				break;
+		}
 
 		this.userTier = new JLabel();
 		this.userTier.setBounds(375, 135, 100, 20);
-		this.userTier.setText(" User Tier");
-		this.userTier.setIcon(this.freeTierIcon); // SAMPLE
+		this.userTier.setText(this.tierName);
+		this.userTier.setIcon(displayedTierIcon); // SAMPLE
 		this.userTier.setHorizontalTextPosition(JLabel.RIGHT);
 		this.userTier.setHorizontalAlignment(JLabel.CENTER);
 		this.userTier.setBackground(new Color(0, 0, 0, 0));
@@ -259,6 +284,13 @@ public class User extends JFrame implements MouseListener, MouseMotionListener {
 			Library.userFlag = false;
 			Library.openedWindows.remove(this);
 			this.dispose();
+		}
+
+		// Edit User Info
+		if (e.getSource() == this.editUser) {
+			Library.openedWindows.remove(this);
+			this.dispose();
+			Library.openedWindows.add(new EditUser(this.userId));
 		}
 
 		// Logout Click

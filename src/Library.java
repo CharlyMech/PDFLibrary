@@ -6,21 +6,27 @@ import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import database.Conn;
+import database.Query;
 
 public class Library extends JFrame implements MouseListener, MouseMotionListener {
 	// ATTRIBUTES
-	protected int userId;
+	protected static int userId;
 	protected static ArrayList<JFrame> openedWindows = new ArrayList<JFrame>();
 	private JPanel topBar = new JPanel(); // Top Bar Panel -> Contains close button and Mouse Motion Listener to move window
 	private JLabel close;
@@ -47,6 +53,7 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 	private ImageIcon myLibraryIcon;
 	private ImageIcon myLibraryIconPressed;
 	private JLabel randomBook;
+	private JLabel randomBookCover;
 	private ImageIcon randomBookIcon;
 	private ImageIcon randomBookIconPressed;
 	private int xMouse; // Get mouse X coordinate for mouse events
@@ -55,9 +62,7 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 	// CONSTRUCTOR
 	public Library(int user_id) {
 		// Store USER_ID value for session
-		this.userId = user_id;
-
-		System.out.println(this.userId);
+		Library.userId = user_id;
 
 		// Add JFrame to Array
 		Library.openedWindows.add(this);
@@ -225,10 +230,18 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		ImageIcon randomBookBGIcon = new ImageIcon("icons/LIGHT/book_frame_320x400.png");
 		JLabel randomBookBG = new JLabel(randomBookBGIcon);
 		randomBookBG.setBounds(0, 0, 320, 400);
+
+		// Random Book Cover Image and Label
+		this.randomBookCover = new JLabel();
+		this.randomBookCover.setBounds(10, 10, 300, 380);
+		this.setRandomBook();
+
+		// Add elements to randomBookPanel -> Need certain order
+		randomBookPanel.add(this.randomBookCover);
 		randomBookPanel.add(randomBookBG);
 
-		// - RANDOM BOOK PANEL
 		sliderPanel.add(randomBookPanel);
+		// - RANDOM BOOK PANEL
 
 		// Random book button
 		this.randomBookIcon = new ImageIcon("icons/LIGHT/refresh.png");
@@ -267,6 +280,41 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		Conn.closeConnection();
 	}
 
+	private void setRandomBook() {
+		String randomURL = Query.returnRandomBookCover();
+		if (randomURL.equals("")) {
+			this.randomBookCover.setText("SOMETHING WENT WRONG\n\nTry again later");
+			this.randomBookCover.setHorizontalAlignment(JLabel.CENTER);
+			this.randomBookCover.setBackground(new Color(0, 0, 0, 0));
+			this.randomBookCover.setForeground(new Color(0x232323));
+			this.randomBookCover.setFont(new Font("Roboto", Font.BOLD, 20));
+		} else {
+			Image randomBookCoverImage;
+			try {
+				randomBookCoverImage = ImageIO.read(new URL(randomURL));
+				ImageIcon randomBookCoverIcon = new ImageIcon(
+						new ImageIcon(randomBookCoverImage).getImage().getScaledInstance(300, 380, Image.SCALE_DEFAULT));
+
+				this.randomBookCover.setIcon(randomBookCoverIcon);
+				this.repaint();
+			} catch (MalformedURLException e) {
+				this.randomBookCover.setText("SOMETHING WENT WRONG, MALFORMED URL\n\n" + e);
+				this.randomBookCover.setHorizontalAlignment(JLabel.CENTER);
+				this.randomBookCover.setBackground(new Color(0, 0, 0, 0));
+				this.randomBookCover.setForeground(new Color(0x232323));
+				this.randomBookCover.setFont(new Font("Roboto", Font.BOLD, 14));
+				this.repaint();
+			} catch (IOException e) {
+				this.randomBookCover.setText("SOMETHING WENT WRONG, IOException\n\n" + e);
+				this.randomBookCover.setHorizontalAlignment(JLabel.CENTER);
+				this.randomBookCover.setBackground(new Color(0, 0, 0, 0));
+				this.randomBookCover.setForeground(new Color(0x232323));
+				this.randomBookCover.setFont(new Font("Roboto", Font.BOLD, 14));
+				this.repaint();
+			}
+		}
+	}
+
 	// MOUSE LISTENER Methods
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -282,8 +330,24 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 
 		// Settings Button event
 		if (e.getSource() == this.user && !Library.userFlag) {
-			Library.userFlag = true;
-			Library.openedWindows.add(new User());
+			ArrayList<Object> userInfo = Query.returnUserInfo(Library.userId);
+			if (userInfo.size() != 0) {
+				String name = userInfo.get(0).toString();
+				String surname = userInfo.get(1).toString();
+				String mail = userInfo.get(2).toString();
+				String tier_name = userInfo.get(3).toString();
+				Library.userFlag = true;
+				Library.openedWindows.add(new User(Library.userId, name, surname, mail, tier_name));
+			} else {
+				int reply = JOptionPane.showConfirmDialog(null, "This mail is alredy registered\nDo you want to Log In?",
+						"Sign In Failed",
+						JOptionPane.DEFAULT_OPTION);
+
+				if (reply == JOptionPane.OK_OPTION) {
+					Library.logout();
+				}
+			}
+
 		}
 
 		// Settings Button event
@@ -307,6 +371,11 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		if (e.getSource() == this.searchButton) { // TEST
 			String searchFilter = String.valueOf(this.searchBy.getSelectedItem());
 			System.out.println(searchFilter);
+		}
+
+		// Reandom Book Refresh Button
+		if (e.getSource() == this.randomBook) {
+			setRandomBook();
 		}
 	}
 

@@ -301,6 +301,8 @@ public class Signin extends JFrame implements MouseListener, MouseMotionListener
 		// Close Button event
 		if (e.getSource() == this.close) {
 			this.dispose();
+			Conn.closeConnection();
+			System.exit(0);
 		}
 
 		// Go Log In Window
@@ -361,6 +363,8 @@ public class Signin extends JFrame implements MouseListener, MouseMotionListener
 				this.confirmPasswd.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0xA6947D)));
 				this.confirmPasswd.setOpaque(true);
 			}
+
+			this.repaint();
 		}
 
 		if (e.getSource() == this.surname) {
@@ -408,6 +412,8 @@ public class Signin extends JFrame implements MouseListener, MouseMotionListener
 				this.confirmPasswd.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0xA6947D)));
 				this.confirmPasswd.setOpaque(true);
 			}
+
+			this.repaint();
 		}
 
 		if (e.getSource() == this.mail) {
@@ -455,6 +461,8 @@ public class Signin extends JFrame implements MouseListener, MouseMotionListener
 				this.confirmPasswd.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0xA6947D)));
 				this.confirmPasswd.setOpaque(true);
 			}
+
+			this.repaint();
 		}
 
 		if (e.getSource() == this.passwd) {
@@ -502,6 +510,8 @@ public class Signin extends JFrame implements MouseListener, MouseMotionListener
 				this.confirmPasswd.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0xA6947D)));
 				this.confirmPasswd.setOpaque(true);
 			}
+
+			this.repaint();
 		}
 
 		if (e.getSource() == this.confirmPasswd) {
@@ -549,9 +559,11 @@ public class Signin extends JFrame implements MouseListener, MouseMotionListener
 				this.confirmPasswd.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(0xA6947D)));
 				this.confirmPasswd.setOpaque(true);
 			}
+
+			this.repaint();
 		}
 
-		// Log In Button event
+		// Sign In Button event
 		if (e.getSource() == this.signin) {
 			// Some fields are not filled
 			if (this.name.getText().isEmpty() || this.surname.getText().isEmpty() || this.mail.getText().isEmpty()
@@ -566,7 +578,7 @@ public class Signin extends JFrame implements MouseListener, MouseMotionListener
 			} else if (!App.checkMail(this.mail.getText())) {
 				JOptionPane.showMessageDialog(null, "Your mail is not valid.\nTry again!", "Sign In Failed",
 						JOptionPane.WARNING_MESSAGE);
-			} else if (Query.checkMailDB(getName())) {
+			} else if (Query.checkMailDB(this.mail.getText())) {
 				int reply = JOptionPane.showConfirmDialog(null, "This mail is alredy registered\nDo you want to Log In?",
 						"Sign In Failed",
 						JOptionPane.YES_NO_OPTION);
@@ -594,6 +606,9 @@ public class Signin extends JFrame implements MouseListener, MouseMotionListener
 					if (reply == JOptionPane.YES_OPTION) {
 						new Library(Query.returnNewUserId());
 						this.dispose();
+					} else {
+						this.dispose();
+						new Login();
 					}
 				}
 			}

@@ -204,6 +204,7 @@ public class Login extends JFrame implements MouseListener, MouseMotionListener 
 		if (e.getSource() == this.close) {
 			this.dispose();
 			Conn.closeConnection();
+			System.exit(0);
 		}
 
 		// Log In Button event
@@ -279,6 +280,8 @@ public class Login extends JFrame implements MouseListener, MouseMotionListener 
 				this.passwd.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0xA6947D)));
 				this.passwd.setOpaque(true);
 			}
+
+			this.repaint();
 		}
 
 		if (e.getSource() == this.passwd) {
@@ -299,6 +302,8 @@ public class Login extends JFrame implements MouseListener, MouseMotionListener 
 				this.passwd.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(0xA6947D)));
 				this.passwd.setOpaque(true);
 			}
+
+			this.repaint();
 		}
 	}
 

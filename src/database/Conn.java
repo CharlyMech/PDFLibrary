@@ -24,7 +24,7 @@ public class Conn {
 				System.out.println("No driver detected! " + exc);
 			}
 
-			this.conn = DriverManager.getConnection("jdbc:mysql://192.168.56.100:3306/Library", "library", "library");
+			Conn.conn = DriverManager.getConnection("jdbc:mysql://192.168.56.100:3306/Library", "library", "library");
 		} catch (java.sql.SQLException sqle) {
 			System.out.println("ERROR: " + sqle);
 			JOptionPane.showMessageDialog(null, "There's been a problem connecting with the database\nPlease try later",
@@ -35,7 +35,7 @@ public class Conn {
 	// Connection test method for login error
 	public boolean connectionValid() {
 		try {
-			return this.conn.isValid(50000);
+			return Conn.conn.isValid(50000);
 		} catch (SQLException sqle) {
 			System.out.println("CONNECTION ERROR: " + sqle);
 			return false;
@@ -51,9 +51,5 @@ public class Conn {
 				System.out.println("CLOSE CONN ERROR: " + sqle);
 			}
 		}
-	}
-
-	public static void main(String[] args) {
-		Conn conn = new Conn();
 	}
 }

@@ -185,6 +185,60 @@ public class Query {
 
 		return url;
 	}
+
+	public static int returnCountAllBooks() {
+		String query = "SELECT COUNT(book_id) as count FROM books";
+		int count = -1;
+		try {
+			Statement stmt = Conn.conn.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				count = rs.getInt("count");
+			}
+		} catch (SQLException sqle) {
+			System.out.println("COUNT ALL BOOKS QUERY ERROR: " + sqle);
+		}
+
+		return count;
+	}
+
+	public static ArrayList<Object> returnBookTier(int book_id) {
+		ArrayList<Object> bookInfo = new ArrayList<>();
+		String query = "SELECT books.tier_id as tier_id, books.title as title, authors.author_name as author_name FROM books JOIN authors on books.author_id=authors.author_id WHERE book_id="
+				+ book_id;
+		try {
+			Statement stmt = Conn.conn.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				bookInfo.add(rs.getInt("tier_id"));
+				bookInfo.add(rs.getString("title"));
+				bookInfo.add(rs.getString("author_name"));
+			}
+		} catch (SQLException sqle) {
+			System.out.println("BOOK ID QUERY ERROR: " + sqle);
+		}
+
+		return bookInfo;
+	}
+
+	public static ArrayList<Integer> returnAllBooksId() {
+		ArrayList<Integer> booksList = new ArrayList<>();
+		String query = "SELECT book_id FROM books ORDER BY RAND()";
+		try {
+			Statement stmt = Conn.conn.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				booksList.add(rs.getInt("book_id"));
+			}
+		} catch (SQLException sqle) {
+			System.out.println("ALL BOOKS ID QUERY ERROR: " + sqle);
+		}
+
+		return booksList;
+	}
 	// - BOOK METHODS
 
 }

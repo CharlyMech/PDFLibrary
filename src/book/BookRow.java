@@ -8,6 +8,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -20,7 +21,7 @@ public class BookRow implements MouseListener {
 	private int book_id;
 	private JLabel bookRow;
 	private JLabel tier;
-	private JLabel notAdded;
+	private JCheckBox checkAdded;
 
 	// CONSTRUCTOR
 	public BookRow(int x, int y, int book_id) {
@@ -39,6 +40,7 @@ public class BookRow implements MouseListener {
 		bookRowPanel.setBackground(new Color(0, 0, 0, 0));
 		bookRowPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		this.bookRow = new JLabel(new ImageIcon("icons/LIGHT/book_row.png"));
+		this.bookRow.addMouseListener(this);
 		bookRow.setBounds(0, 0, 750, 50);
 
 		// Tier Bordered Icon
@@ -80,10 +82,18 @@ public class BookRow implements MouseListener {
 		bookRowPanel.add(author);
 
 		// TODO -> Query if book is added to User's Library
-		// Add Icon //! This is for now, just for testing
-		this.notAdded = new JLabel(new ImageIcon("icons/LIGHT/add_false.png"));
-		this.notAdded.setBounds(715, 13, 25, 25);
-		bookRowPanel.add(notAdded);
+		ImageIcon addFalse = new ImageIcon("icons/LIGHT/add_false.png");
+		ImageIcon addTrue = new ImageIcon("icons/LIGHT/add_true.png");
+		this.checkAdded = new JCheckBox();
+		this.checkAdded.setBackground(new Color(0, 0, 0, 0));
+		// Set default icon for checkbox
+		this.checkAdded.setIcon(addFalse); //! Dafault until DB query
+		// Set selected icon when checkbox state is selected
+		this.checkAdded.setSelectedIcon(addTrue);
+
+		// this.notAdded = new JLabel(new ImageIcon("icons/LIGHT/add_false.png"));
+		this.checkAdded.setBounds(710, 13, 30, 25);
+		bookRowPanel.add(this.checkAdded);
 
 		bookRowPanel.add(bookRow);
 		return bookRowPanel;
@@ -112,7 +122,5 @@ public class BookRow implements MouseListener {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'mouseReleased'");
 	}
 }

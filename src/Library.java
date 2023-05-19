@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Image;
@@ -15,12 +16,18 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 
+import book.BookRow;
 import database.Conn;
 import database.Query;
 
@@ -43,7 +50,6 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 	protected static boolean userFlag = false;
 	private ImageIcon userIcon;
 	private ImageIcon userPressedIcon;
-	private JPanel main;
 	private JTextField search;
 	private JComboBox searchBy;
 	private JLabel searchButton;
@@ -160,11 +166,11 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		// - TOP BAR
 
 		// MAIN PANEL -
-		this.main = new JPanel();
-		this.main.setBounds(0, 80, 1200, 720);
-		this.main.setLayout(null);
-		this.main.setBackground(new Color(0xEFE5D5));
-		this.main.setOpaque(true);
+		JPanel main = new JPanel();
+		main.setBounds(0, 80, 1200, 720);
+		main.setLayout(null);
+		main.setBackground(new Color(0, 0, 0, 0));
+		main.setOpaque(true);
 
 		// Search Text Field
 		this.search = new JTextField();
@@ -176,7 +182,7 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		this.search.setBackground(new Color(0, 0, 0, 0));
 		this.search.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0xA6947D)));
 		this.search.addMouseListener(this);
-		this.main.add(this.search);
+		main.add(this.search);
 
 		// Search By JComboBox
 		String[] searchByItems = { "Title", "Category", "Author", "Year" };
@@ -185,7 +191,7 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		this.searchBy.setBackground(new Color(0xA2845E));
 		this.searchBy.setForeground(new Color(0x232323));
 		this.searchBy.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(0xA6947D)));
-		this.main.add(this.searchBy);
+		main.add(this.searchBy);
 
 		// Search Button
 		this.searchButtonIcon = new ImageIcon("icons/LIGHT/searchButton.png");
@@ -194,12 +200,12 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		this.searchButton.setBounds(925, 35, 50, 50);
 		this.searchButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		this.searchButton.addMouseListener(this);
-		this.main.add(this.searchButton);
+		main.add(this.searchButton);
 
 		ImageIcon searchButtonShadowIcon = new ImageIcon("icons/LIGHT/searchButton_shadow.png");
 		JLabel searchButtonShadow = new JLabel(searchButtonShadowIcon);
 		searchButtonShadow.setBounds(925, 35, 50, 50);
-		this.main.add(searchButtonShadow);
+		main.add(searchButtonShadow);
 
 		// - SLIDER PANEL
 		JPanel sliderPanel = new JPanel();
@@ -260,13 +266,64 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 
 		// - SLIDER PANEL
 
-		this.main.add(sliderPanel);
+		// BOOKS PANEL -
+		JPanel mainBooks = new JPanel(null);
+		mainBooks.setBounds(10, 120, 790, 600);
+		mainBooks.setBackground(new Color(0, 0, 0, 0));
+
+		// System.out.println(0, Query.returnCountAllBooks() * 50, 700, 50);
+
+		JPanel insidePanel = new JPanel(null);
+		insidePanel.setPreferredSize(new Dimension(770, Query.returnCountAllBooks() * 50));
+		insidePanel.setBackground(new Color(0, 0, 0, 0));
+
+		JScrollPane scroller = new JScrollPane(insidePanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scroller.setBounds(0, 0, 790, 590);
+		scroller.setPreferredSize(new Dimension(790, 590));
+		scroller.setBackground(new Color(0, 0, 0, 0));
+		scroller.setBorder(null);
+		scroller.getVerticalScrollBar().setUnitIncrement(50);
+
+		// Bars Styling
+		scroller.getVerticalScrollBar().getComponent(0).setBackground(new Color(0xA2845E)); // Down bg
+		scroller.getVerticalScrollBar().getComponent(0).setForeground(new Color(0x2e2e2e)); // Down fg
+		scroller.getVerticalScrollBar().getComponent(1).setBackground(new Color(0xA2845E)); // Up bg
+		scroller.getVerticalScrollBar().getComponent(1).setForeground(new Color(0x2e2e2e)); // Up fg
+		UIManager.put("ScrollBar.thumb", new ColorUIResource(new Color(0xA2845E))); // Scroller
+		scroller.getVerticalScrollBar().setUI(new BasicScrollBarUI()); // Scroller
+
+		// ! ---------------------------- ! //
+		// TESTING ADDING BOOK ROW TO PANEL //
+
+		ArrayList<Integer> booksList = Query.returnAllBooksId();
+		int y = 0; // For Y axis coordinate
+		for (Integer b : booksList) {
+			insidePanel.add(new BookRow(10, y, b).createMainRow());
+			y += 50;
+		}
+
+		// BookRow bRow = new BookRow(10, 0, 15423);
+		// insidePanel.add(bRow.createMainRow());
+
+		// BookRow bRow2 = new BookRow(10, 50, 6170);
+		// insidePanel.add(bRow2.createMainRow());
+		// TESTING ADDING BOOK ROW TO PANEL //
+		// ! ---------------------------- ! //
+
+		mainBooks.add(scroller);
+
+		// - BOOKS PANEL
+
+		// Add Panels to main
+		main.add(sliderPanel);
+		main.add(mainBooks);
 
 		// - MAIN PANEL
 
 		// ADD ELEMENTS TO FRAME -
 		this.add(this.topBar);
-		this.add(this.main);
+		this.add(main);
 		// - ADD ELEMENTS TO FRAME
 
 		// Set Window Visible

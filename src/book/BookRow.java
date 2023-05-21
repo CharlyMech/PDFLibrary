@@ -3,6 +3,7 @@ package book;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -44,9 +45,13 @@ public class BookRow implements MouseListener {
 		bookRow.setBounds(0, 0, 750, 50);
 
 		// Tier Bordered Icon
-		ImageIcon free = new ImageIcon("icons/free_tier_icon_bordered.png");
-		ImageIcon pro = new ImageIcon("icons/pro_tier_icon_bordered.png");
-		ImageIcon premium = new ImageIcon("icons/premium_tier_icon_bordered.png");
+		ImageIcon free = new ImageIcon(new ImageIcon("icons/free_tier_icon_bordered.png").getImage().getScaledInstance(25,
+				25, Image.SCALE_DEFAULT));
+		ImageIcon pro = new ImageIcon(new ImageIcon("icons/pro_tier_icon_bordered.png").getImage().getScaledInstance(25,
+				25, Image.SCALE_DEFAULT));
+		ImageIcon premium = new ImageIcon(
+				new ImageIcon("icons/premium_tier_icon_bordered.png").getImage().getScaledInstance(25,
+						25, Image.SCALE_DEFAULT));
 		this.tier = new JLabel();
 		switch ((int) bookInfo.get(0)) {
 			case -1:
@@ -82,8 +87,10 @@ public class BookRow implements MouseListener {
 		bookRowPanel.add(author);
 
 		// TODO -> Query if book is added to User's Library
-		ImageIcon addFalse = new ImageIcon("icons/LIGHT/add_false.png");
-		ImageIcon addTrue = new ImageIcon("icons/LIGHT/add_true.png");
+		ImageIcon addFalse = new ImageIcon(
+				new ImageIcon("icons/LIGHT/add_false.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+		ImageIcon addTrue = new ImageIcon(
+				new ImageIcon("icons/LIGHT/add_true.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
 		this.checkAdded = new JCheckBox();
 		this.checkAdded.setBackground(new Color(0, 0, 0, 0));
 		// Set default icon for checkbox

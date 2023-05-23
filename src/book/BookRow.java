@@ -11,9 +11,12 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import database.Query;
+import windows.Book;
+import windows.Library;
 
 public class BookRow implements MouseListener {
 	// ATTRIBUTES
@@ -111,7 +114,15 @@ public class BookRow implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		// Click On Panel
 		if (e.getSource() == this.bookRow) {
-			System.out.println(this.book_id);
+			if (Library.nBooksWindows < 5) {
+				Library.nBooksWindows++;
+				Library.openedWindows.add(new Book(this.book_id));
+			} else {
+				JOptionPane.showMessageDialog(null,
+						"You already have 5 Book windows opened\nClose one if you want to open more",
+						"Max Book Windows Reached!",
+						JOptionPane.WARNING_MESSAGE);
+			}
 		}
 	}
 

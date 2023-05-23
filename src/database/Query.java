@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import javax.swing.SpringLayout;
 import javax.swing.plaf.nimbus.State;
 
 public class Query {
@@ -108,7 +107,7 @@ public class Query {
 	// Return User Info by ID
 	public static ArrayList<Object> returnUserInfo(int user_id) {
 		ArrayList<Object> userInfo = new ArrayList<>();
-		String query = "SELECT users.user_name as name, users.user_surname as surname, users.mail as mail, tiers.tier_name as tier_name, users.tier_id as tier_id FROM users JOIN tiers ON users.tier_id=tiers.tier_id WHERE users.user_id="
+		String query = "SELECT users.user_name AS name, users.user_surname AS surname, users.mail AS mail, tiers.tier_name AS tier_name, users.tier_id AS tier_id FROM users JOIN tiers ON users.tier_id=tiers.tier_id WHERE users.user_id="
 				+ user_id;
 
 		try {
@@ -168,26 +167,28 @@ public class Query {
 	// - USER METHODS
 
 	// BOOK METHODS -
-	public static String returnRandomBookCover() {
-		String query = "SELECT cover FROM books ORDER BY RAND() LIMIT 1";
-		String url = "";
+	// Return random book_id for random book panel in Library window
+	public static int returnRandomBookId() {
+		int bookId = -1;
+		String query = "SELECT book_id FROM books ORDER BY RAND() LIMIT 1";
 
 		try {
 			Statement stmt = Conn.conn.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 
 			while (rs.next()) {
-				url = rs.getString("cover");
+				bookId = rs.getInt("book_id");
 			}
 		} catch (SQLException sqle) {
 			System.out.println("RANDOM BOOK COVER QUERY ERROR: " + sqle);
 		}
 
-		return url;
+		return bookId;
 	}
 
+	// Return coun tof books -> JScrollPane scroll size
 	public static int returnCountAllBooks() {
-		String query = "SELECT COUNT(book_id) as count FROM books";
+		String query = "SELECT COUNT(book_id) AS count FROM books";
 		int count = -1;
 		try {
 			Statement stmt = Conn.conn.createStatement();
@@ -203,9 +204,10 @@ public class Query {
 		return count;
 	}
 
+	// Return info about book, tier and book for BookRow object
 	public static ArrayList<Object> returnBookTier(int book_id) {
 		ArrayList<Object> bookInfo = new ArrayList<>();
-		String query = "SELECT books.tier_id as tier_id, books.title as title, authors.author_name as author_name FROM books JOIN authors on books.author_id=authors.author_id WHERE book_id="
+		String query = "SELECT books.tier_id AS tier_id, books.title AS title, authors.author_name AS author_name FROM books JOIN authors on books.author_id=authors.author_id WHERE book_id="
 				+ book_id;
 		try {
 			Statement stmt = Conn.conn.createStatement();
@@ -223,6 +225,7 @@ public class Query {
 		return bookInfo;
 	}
 
+	// Return all book_id to create every BookRow
 	public static ArrayList<Integer> returnAllBooksId() {
 		ArrayList<Integer> booksList = new ArrayList<>();
 		String query = "SELECT book_id FROM books ORDER BY RAND()";
@@ -238,6 +241,52 @@ public class Query {
 		}
 
 		return booksList;
+	}
+
+	// Return all book info to be displayed in Book class window
+	public static ArrayList<Object> returnBookInfo(int book_id) {
+		ArrayList<Object> bookInfo = new ArrayList<Object>();
+		String query = "SELECT books.title AS title, authors.author_name AS author, books.publisher AS publisher, books.pub_year AS year, books.lang AS lang, books.book_description AS summary, books.pages AS pages, books.tier_id AS tier FROM books JOIN authors ON books.author_id=authors.author_id WHERE book_id="
+				+ book_id;
+
+		try {
+			Statement stmt = Conn.conn.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				bookInfo.add(rs.getString("title"));
+				bookInfo.add(rs.getString("author"));
+				bookInfo.add(rs.getString("publisher"));
+				bookInfo.add(rs.getInt("year"));
+				bookInfo.add(rs.getString("lang"));
+				bookInfo.add(rs.getString("summary"));
+				bookInfo.add(rs.getInt("pages"));
+				bookInfo.add(rs.getInt("tier"));
+			}
+		} catch (SQLException sqle) {
+			System.out.println("BOOK INFO QUERY ERROR: " + sqle);
+		}
+
+		return bookInfo;
+	}
+
+	// Return book cover URL from its ID
+	public static String returnBookCover(int book_id) {
+		String url = "";
+		String query = "SELECT cover FROM books WHERE book_id=" + book_id;
+
+		try {
+			Statement stmt = Conn.conn.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				url = rs.getString("cover");
+			}
+		} catch (SQLException sqle) {
+			System.out.println("BOOK COVER QUERY ERROR: " + sqle);
+		}
+
+		return url;
 	}
 	// - BOOK METHODS
 

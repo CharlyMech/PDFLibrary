@@ -58,7 +58,8 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 	private ImageIcon myLibraryIcon;
 	private ImageIcon myLibraryIconPressed;
 	private JLabel randomBook;
-	private JPanel randomBookPanel;
+	private BookCover random;
+	private JPanel randomPanel;
 	private JPanel sliderPanel;
 	private ImageIcon randomBookIcon;
 	private ImageIcon randomBookIconPressed;
@@ -230,7 +231,10 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		this.sliderPanel.add(myLibraryShadow);
 
 		// RANDOM BOOK PANEL - //! ---- !//
-
+		this.random = new BookCover(40, 100, 320, 400, Query.returnRandomBookId());
+		this.randomPanel = random.createCover();
+		this.randomPanel.addMouseListener(this);
+		this.sliderPanel.add(randomPanel);
 		// - RANDOM BOOK PANEL //! ---- !//
 
 		// Random book button
@@ -314,13 +318,6 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		Conn.closeConnection();
 	}
 
-	private void setRandomBook() {
-		// panel coordinates: setBounds(40, 100, 320, 400);
-		this.remove(this.randomBookPanel);
-		this.randomBookPanel = new BookCover(Query.returnRandomBookID()).createCover();
-		this.repaint();
-	}
-
 	// MOUSE LISTENER Methods
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -379,9 +376,29 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 			System.out.println(searchFilter);
 		}
 
+		// Click on Random Book Panel
+		if (e.getSource() == this.randomPanel) {
+			// Click On Panel
+			if (Library.nBooksWindows < 5) {
+				Library.nBooksWindows++;
+				Library.openedWindows.add(new Book(this.random.getBookId()));
+			} else {
+				JOptionPane.showMessageDialog(null,
+						"You already have 5 Book windows opened\nClose one if you want to open more",
+						"Max Book Windows Reached!",
+						JOptionPane.WARNING_MESSAGE);
+			}
+		}
+
 		// Reandom Book Refresh Button
 		if (e.getSource() == this.randomBook) {
-			this.setRandomBook();
+			this.random = null;
+			this.sliderPanel.remove(this.randomPanel);
+			this.random = new BookCover(40, 100, 320, 400, Query.returnRandomBookId());
+			this.randomPanel = random.createCover();
+			this.randomPanel.addMouseListener(this);
+			this.sliderPanel.add(randomPanel);
+			this.getContentPane().repaint();
 		}
 	}
 

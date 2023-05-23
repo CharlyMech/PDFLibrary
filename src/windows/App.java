@@ -5,8 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Pattern;
 
-import book.BookCover;
-import database.*;
+import database.Conn;
 
 public class App {
     public static void main(String[] args) {

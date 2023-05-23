@@ -5,8 +5,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import javax.swing.plaf.nimbus.State;
-
 public class Query {
 	// USER METHODS -
 

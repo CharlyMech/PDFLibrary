@@ -1,4 +1,4 @@
-package book;
+package items;
 
 import java.awt.Color;
 import java.awt.Cursor;
@@ -38,10 +38,6 @@ public class BookCover implements MouseListener {
 
 	public BookCover(int book_id) {
 		this.book_id = book_id;
-	}
-
-	public void test() {
-		System.out.println("hola");
 	}
 
 	public JPanel createCover() {

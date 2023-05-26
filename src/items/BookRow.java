@@ -1,4 +1,4 @@
-package book;
+package items;
 
 import java.awt.Color;
 import java.awt.Cursor;

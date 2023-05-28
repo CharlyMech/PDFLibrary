@@ -7,9 +7,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.UIManager;
+import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 
-import book.BookCover;
 import database.Query;
+import items.BookCover;
+import items.CategoryItem;
 
 import java.awt.Color;
 import java.awt.Cursor;
@@ -96,7 +100,7 @@ public class Book extends JFrame implements MouseListener, MouseMotionListener, 
 		// MAIN -
 		// Panel
 		JPanel main = new JPanel(null);
-		main.setPreferredSize(new Dimension(480, 1200)); //! FOR NOW -> Need to do some calcs of height
+		main.setPreferredSize(new Dimension(480, 1175)); //! FOR NOW -> Need to do some calcs of height
 		main.setBackground(new Color(0, 0, 0, 0));
 
 		// Title Label
@@ -131,17 +135,159 @@ public class Book extends JFrame implements MouseListener, MouseMotionListener, 
 		summaryLabel.setHorizontalAlignment(JLabel.LEFT);
 		main.add(summaryLabel);
 
-		JTextArea summaryArea = new JTextArea();
-		summaryArea.setText(summary);
+		JTextArea summaryArea = new JTextArea(summary);
 		summaryArea.setEditable(false);
 		summaryArea.setLineWrap(true);
-		summaryArea.setBounds(25, 660, 425, 200);
+		summaryArea.setWrapStyleWord(true);
 		summaryArea.setBackground(new Color(0, 0, 0, 0));
 		summaryArea.setForeground(new Color(0x8E765F));
 		summaryArea.setFont(new Font("Roboto", Font.PLAIN, 14));
 
 		JScrollPane summaryScroller = new JScrollPane(summaryArea);
+		summaryScroller.setBounds(25, 660, 425, 200);
+		summaryScroller.setBackground(new Color(0, 0, 0, 0));
+		summaryScroller.setPreferredSize(new Dimension(425, 200));
+		summaryScroller.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(0xA6947D)));
+		summaryScroller.addMouseWheelListener(this);
+		summaryScroller.getVerticalScrollBar().setUnitIncrement(10);
+		// Bars Styling
+		summaryScroller.getVerticalScrollBar().getComponent(0).setBackground(new Color(0xA2845E)); // Down bg
+		summaryScroller.getVerticalScrollBar().getComponent(0).setForeground(new Color(0x2e2e2e)); // Down fg
+		summaryScroller.getVerticalScrollBar().getComponent(1).setBackground(new Color(0xA2845E)); // Up bg
+		summaryScroller.getVerticalScrollBar().getComponent(1).setForeground(new Color(0x2e2e2e)); // Up fg
+		UIManager.put("ScrollBar.thumb", new ColorUIResource(new Color(0xA2845E))); // Scroller
+		summaryScroller.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
+			@Override
+			protected void configureScrollBarColors() {
+				this.trackColor = new Color(0xE0D5BF);
+				this.thumbColor = new Color(0xA2845E);
+			}
+		}); // Scroller
+
 		main.add(summaryScroller);
+
+		// Details
+		JLabel detailsLabel = new JLabel("Details:");
+		detailsLabel.setBounds(25, 875, 425, 30);
+		detailsLabel.setBackground(new Color(0, 0, 0, 0));
+		detailsLabel.setForeground(new Color(0x8E765F));
+		detailsLabel.setFont(new Font("Roboto", Font.BOLD, 18));
+		detailsLabel.setHorizontalAlignment(JLabel.LEFT);
+		main.add(detailsLabel);
+
+		// DETAILS PANEL -
+		JPanel detailsPanel = new JPanel(null);
+		detailsPanel.setBounds(25, 910, 425, 115);
+		detailsPanel.setBackground(new Color(0, 0, 0, 0));
+
+		// Year
+		JLabel yearTitle = new JLabel("Year:", new ImageIcon("icons/LIGHT/dot.png"), JLabel.LEFT);
+		yearTitle.setBounds(25, 0, 125, 25);
+		yearTitle.setBackground(new Color(0, 0, 0, 0));
+		yearTitle.setForeground(new Color(0x8E765F));
+		yearTitle.setFont(new Font("Roboto", Font.BOLD, 16));
+		detailsPanel.add(yearTitle);
+
+		JLabel yearValue = new JLabel(String.valueOf(year));
+		yearValue.setBounds(175, 0, 125, 25);
+		yearValue.setBackground(new Color(0, 0, 0, 0));
+		yearValue.setForeground(new Color(0x2e2e2e));
+		yearValue.setFont(new Font("Roboto", Font.PLAIN, 14));
+		detailsPanel.add(yearValue);
+
+		// Editor
+		JLabel editorTitle = new JLabel("Editor:", new ImageIcon("icons/LIGHT/dot.png"), JLabel.LEFT);
+		editorTitle.setBounds(25, 30, 125, 25);
+		editorTitle.setBackground(new Color(0, 0, 0, 0));
+		editorTitle.setForeground(new Color(0x8E765F));
+		editorTitle.setFont(new Font("Roboto", Font.BOLD, 16));
+		detailsPanel.add(editorTitle);
+
+		JLabel editorValue = new JLabel(publisher);
+		editorValue.setBounds(175, 30, 125, 25);
+		editorValue.setBackground(new Color(0, 0, 0, 0));
+		editorValue.setForeground(new Color(0x2e2e2e));
+		editorValue.setFont(new Font("Roboto", Font.PLAIN, 14));
+		detailsPanel.add(editorValue);
+
+		// Pages
+		JLabel pagesTitle = new JLabel("Pages:", new ImageIcon("icons/LIGHT/dot.png"), JLabel.LEFT);
+		pagesTitle.setBounds(25, 60, 125, 25);
+		pagesTitle.setBackground(new Color(0, 0, 0, 0));
+		pagesTitle.setForeground(new Color(0x8E765F));
+		pagesTitle.setFont(new Font("Roboto", Font.BOLD, 16));
+		detailsPanel.add(pagesTitle);
+
+		JLabel pagesValue = new JLabel(String.valueOf(pages));
+		pagesValue.setBounds(175, 60, 125, 25);
+		pagesValue.setBackground(new Color(0, 0, 0, 0));
+		pagesValue.setForeground(new Color(0x2e2e2e));
+		pagesValue.setFont(new Font("Roboto", Font.PLAIN, 14));
+		detailsPanel.add(pagesValue);
+
+		// Language
+		JLabel langTitle = new JLabel("Language:", new ImageIcon("icons/LIGHT/dot.png"), JLabel.LEFT);
+		langTitle.setBounds(25, 90, 125, 25);
+		langTitle.setBackground(new Color(0, 0, 0, 0));
+		langTitle.setForeground(new Color(0x8E765F));
+		langTitle.setFont(new Font("Roboto", Font.BOLD, 16));
+		detailsPanel.add(langTitle);
+
+		JLabel langValue = new JLabel(lang);
+		langValue.setBounds(175, 90, 125, 25);
+		langValue.setBackground(new Color(0, 0, 0, 0));
+		langValue.setForeground(new Color(0x2e2e2e));
+		langValue.setFont(new Font("Roboto", Font.PLAIN, 14));
+		detailsPanel.add(langValue);
+
+		main.add(detailsPanel);
+		// - DETAILS PANEL
+
+		// Categories Label
+		JLabel catLabel = new JLabel("Categories");
+		catLabel.setBounds(25, 1050, 425, 30);
+		catLabel.setBackground(new Color(0, 0, 0, 0));
+		catLabel.setForeground(new Color(0x8E765F));
+		catLabel.setFont(new Font("Roboto", Font.BOLD, 18));
+		catLabel.setHorizontalAlignment(JLabel.LEFT);
+		main.add(catLabel);
+
+		// CATEGORIES PANEL -
+		ArrayList<String> goodNames = Book.returnGoodCatNames(this.bookId);
+
+		JPanel catsPanel = new JPanel(null);
+		catsPanel.setPreferredSize(new Dimension(goodNames.size() * 150, 75));
+		catsPanel.setBackground(new Color(0, 0, 0, 0));
+
+		JScrollPane catsScroller = new JScrollPane(catsPanel, JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		catsScroller.setBounds(25, 1090, 425, 75);
+		catsScroller.setPreferredSize(new Dimension(425, 75));
+		catsScroller.setBorder(null);
+		catsScroller.setBackground(new Color(0, 0, 0, 0));
+
+		for (String n : goodNames) {
+			int xCoor = goodNames.indexOf(n) * 150;
+			catsPanel.add(new CategoryItem(xCoor, n).createItem());
+		}
+
+		// Bars Styling
+		catsScroller.getHorizontalScrollBar().getComponent(0).setBackground(new Color(0xA2845E)); // Down bg
+		catsScroller.getHorizontalScrollBar().getComponent(0).setForeground(new Color(0x2e2e2e)); // Down fg
+		catsScroller.getHorizontalScrollBar().getComponent(1).setBackground(new Color(0xA2845E)); // Up bg
+		catsScroller.getHorizontalScrollBar().getComponent(1).setForeground(new Color(0x2e2e2e)); // Up fg
+		UIManager.put("ScrollBar.thumb", new ColorUIResource(new Color(0xA2845E))); // Scroller
+		catsScroller.getHorizontalScrollBar().setUI(new BasicScrollBarUI() {
+			@Override
+			protected void configureScrollBarColors() {
+				this.trackColor = new Color(0xE0D5BF);
+				this.thumbColor = new Color(0xA2845E);
+			}
+		}); // Scroller
+
+		main.add(catsScroller);
+		// - CATEGORIES PANEL
+
 		// - MAIN
 
 		// SCROLLPANE -
@@ -153,6 +299,20 @@ public class Book extends JFrame implements MouseListener, MouseMotionListener, 
 		scroller.setBorder(null);
 		scroller.getVerticalScrollBar().setUnitIncrement(20);
 		scroller.addMouseWheelListener(this);
+
+		// Bars Styling
+		scroller.getVerticalScrollBar().getComponent(0).setBackground(new Color(0xA2845E)); // Down bg
+		scroller.getVerticalScrollBar().getComponent(0).setForeground(new Color(0x2e2e2e)); // Down fg
+		scroller.getVerticalScrollBar().getComponent(1).setBackground(new Color(0xA2845E)); // Up bg
+		scroller.getVerticalScrollBar().getComponent(1).setForeground(new Color(0x2e2e2e)); // Up fg
+		UIManager.put("ScrollBar.thumb", new ColorUIResource(new Color(0xA2845E))); // Scroller
+		scroller.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
+			@Override
+			protected void configureScrollBarColors() {
+				this.trackColor = new Color(0xE0D5BF);
+				this.thumbColor = new Color(0xA2845E);
+			}
+		}); // Scroller
 		// - SCROLLPANE
 
 		// ADD ELEMENTS TO FRAME -
@@ -162,6 +322,21 @@ public class Book extends JFrame implements MouseListener, MouseMotionListener, 
 
 		// Set Window Visible
 		this.setVisible(true);
+	}
+
+	private static ArrayList<String> returnGoodCatNames(int book_id) {
+		ArrayList<String> names = Query.returnBookCategoriesName(book_id);
+		for (String n : names) {
+			String goodNameString = "";
+			String[] tt = n.replace("_", " ").split(" ");
+			for (String t : tt) {
+				String capital = t.substring(0, 1).toUpperCase();
+				goodNameString += capital + t.substring(1) + " ";
+			}
+			names.set(names.indexOf(n), goodNameString);
+		}
+
+		return names;
 	}
 
 	// MOUSE LISTENER Methods

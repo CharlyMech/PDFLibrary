@@ -24,10 +24,10 @@ import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
-import book.BookCover;
-import book.BookRow;
 import database.Conn;
 import database.Query;
+import items.BookCover;
+import items.BookRow;
 
 public class Library extends JFrame implements MouseListener, MouseMotionListener {
 	// ATTRIBUTES
@@ -230,12 +230,12 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		myLibraryShadow.setBounds(122, 23, 175, 55);
 		this.sliderPanel.add(myLibraryShadow);
 
-		// RANDOM BOOK PANEL - //! ---- !//
+		// RANDOM BOOK PANEL - 
 		this.random = new BookCover(40, 100, 320, 400, Query.returnRandomBookId());
 		this.randomPanel = random.createCover();
 		this.randomPanel.addMouseListener(this);
 		this.sliderPanel.add(randomPanel);
-		// - RANDOM BOOK PANEL //! ---- !//
+		// - RANDOM BOOK PANEL 
 
 		// Random book button
 		this.randomBookIcon = new ImageIcon("icons/LIGHT/refresh.png");
@@ -331,7 +331,7 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 			this.setState(Frame.ICONIFIED);
 		}
 
-		// Settings Button event
+		// User Button event
 		if (e.getSource() == this.user && !Library.userFlag) {
 			ArrayList<Object> userInfo = Query.returnUserInfo(Library.userId);
 			if (userInfo.size() != 0) {
@@ -342,8 +342,8 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 				Library.userFlag = true;
 				Library.openedWindows.add(new User(Library.userId, name, surname, mail, tier_name));
 			} else {
-				int reply = JOptionPane.showConfirmDialog(null, "This mail is alredy registered\nDo you want to Log In?",
-						"Sign In Failed",
+				int reply = JOptionPane.showConfirmDialog(null, "Something went wrong\nTry again later",
+						"Connection lost",
 						JOptionPane.DEFAULT_OPTION);
 
 				if (reply == JOptionPane.OK_OPTION) {
@@ -374,6 +374,13 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		if (e.getSource() == this.searchButton) { // TEST
 			String searchFilter = String.valueOf(this.searchBy.getSelectedItem());
 			System.out.println(searchFilter);
+		}
+
+		// Click on MyLibrary button
+		if (e.getSource() == this.myLibrary) {
+			Library.openedWindows.remove(this);
+			this.dispose();
+			Library.openedWindows.add(new MyLibrary(Library.userId));
 		}
 
 		// Click on Random Book Panel

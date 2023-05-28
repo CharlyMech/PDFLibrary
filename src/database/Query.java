@@ -286,6 +286,26 @@ public class Query {
 
 		return url;
 	}
+
+	// Return all books Categories name by book ID
+	public static ArrayList<String> returnBookCategoriesName(int book_id) {
+		ArrayList<String> bookCatsName = new ArrayList<String>();
+		String query = "SELECT categories.cat_name AS name FROM categories JOIN bookscats ON categories.cat_id=bookscats.cat_id WHERE bookscats.book_id="
+				+ book_id;
+
+		try {
+			Statement stmt = Conn.conn.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				bookCatsName.add(rs.getString("name"));
+			}
+		} catch (SQLException sqle) {
+			System.out.println("ALL CATS NAME FROM BOOK QUERY ERROR: " + sqle);
+		}
+
+		return bookCatsName;
+	}
 	// - BOOK METHODS
 
 }

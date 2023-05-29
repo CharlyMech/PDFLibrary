@@ -3,6 +3,8 @@ package items;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
@@ -15,8 +17,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import database.Query;
+import windows.Library;
 
-public class BookCover implements MouseListener {
+public class BookCover implements MouseListener, ActionListener {
 	// ATTRIBUTES
 	private int x;
 	private int y;
@@ -93,6 +96,10 @@ public class BookCover implements MouseListener {
 		this.checkAdded.setIcon(addFalse); //! Dafault until DB query
 		// Set selected icon when checkbox state is selected
 		this.checkAdded.setSelectedIcon(addTrue);
+		this.checkAdded.addActionListener(this);
+		// Check if the Book is alredy in User's Library
+		boolean state = Query.checkIfBookInLibrary(Library.userId, this.book_id);
+		this.checkAdded.setSelected(!state);
 
 		// this.notAdded = new JLabel(new ImageIcon("icons/LIGHT/add_false.png"));
 		this.checkAdded.setBounds(15, 20, 45, 35);
@@ -147,4 +154,12 @@ public class BookCover implements MouseListener {
 	public void mouseReleased(MouseEvent e) {
 	}
 
+	// Action Listener Method
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == this.checkAdded) {
+			boolean newState = Library.checkBoxClick(this.book_id, !this.checkAdded.isSelected());
+			this.checkAdded.setSelected(!newState);
+		}
+	}
 }

@@ -2,23 +2,32 @@ package windows;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.UIManager;
+import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 
 import database.Query;
+import items.BookCover;
 
-public class MyLibrary extends JFrame implements MouseListener, MouseMotionListener {
+public class MyLibrary extends JFrame implements MouseListener, MouseMotionListener, MouseWheelListener {
 	// ATTRIBUTES
 	private int userId;
 	private JPanel topBar = new JPanel(); // Top Bar Panel -> Contains close button and Mouse Motion Listener to move window
@@ -153,6 +162,69 @@ public class MyLibrary extends JFrame implements MouseListener, MouseMotionListe
 		userNameSurname.setFont(new Font("Roboto", Font.BOLD, 26));
 		main.add(userNameSurname);
 
+		// USER LIBRARY -
+		// Query User's Books
+		ArrayList<Integer[]> books = Query.returnUserBooksId(this.userId);
+		int nRows = books.size() / 3;
+		int resto = books.size() % 3;
+		if (resto > 0) {
+			nRows++;
+		}
+
+		int x = 0;
+		int y = 0;
+		int width = 320;
+		int height = 420;
+		int c = 0;
+
+		JPanel userBooks = new JPanel(null);
+		userBooks.setPreferredSize(new Dimension(980, nRows * 420));
+		userBooks.setBackground(new Color(0, 0, 0, 0));
+
+		for (Integer[] b : books) {
+			if (c == 3) {
+				c = 0;
+				x = 0;
+				y += height;
+			}
+
+			JPanel bookCoverPanel = new JPanel(null);
+			bookCoverPanel.setBounds(x, y, width, height);
+			bookCoverPanel.setBackground(new Color(0, 0, 0, 0));
+
+			bookCoverPanel.add(new BookCover(20, 15, width - 45, height - 30, b[0]).createCover());
+
+			userBooks.add(bookCoverPanel);
+
+			c++;
+			x += width;
+		}
+
+		JScrollPane scroller = new JScrollPane(userBooks, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroller.setBounds(10, 80, 990, 640);
+		scroller.setBackground(new Color(0, 0, 0, 0));
+		scroller.setBorder(null);
+		scroller.getVerticalScrollBar().setUnitIncrement(20);
+		scroller.addMouseWheelListener(this);
+
+		// Bars Styling
+		scroller.getVerticalScrollBar().getComponent(0).setBackground(new Color(0xA2845E)); // Down bg
+		scroller.getVerticalScrollBar().getComponent(0).setForeground(new Color(0x2e2e2e)); // Down fg
+		scroller.getVerticalScrollBar().getComponent(1).setBackground(new Color(0xA2845E)); // Up bg
+		scroller.getVerticalScrollBar().getComponent(1).setForeground(new Color(0x2e2e2e)); // Up fg
+		UIManager.put("ScrollBar.thumb", new ColorUIResource(new Color(0xA2845E))); // Scroller
+		scroller.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
+			@Override
+			protected void configureScrollBarColors() {
+				this.trackColor = new Color(0xE0D5BF);
+				this.thumbColor = new Color(0xA2845E);
+			}
+		}); // Scroller
+
+		main.add(scroller);
+		// - USER LIBRARY
+
 		// - MAIN
 
 		// ADD ELEMENTS TO FRAME -
@@ -170,8 +242,7 @@ public class MyLibrary extends JFrame implements MouseListener, MouseMotionListe
 	public void mouseClicked(MouseEvent e) {
 		// Close Button event
 		if (e.getSource() == this.close) {
-			Library.openedWindows.remove(this);
-			this.dispose();
+			Library.logout();
 		}
 
 		// Minimize Button event
@@ -373,5 +444,10 @@ public class MyLibrary extends JFrame implements MouseListener, MouseMotionListe
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		this.repaint();
 	}
 }

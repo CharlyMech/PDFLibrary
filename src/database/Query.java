@@ -219,6 +219,29 @@ public class Query {
 		}
 	}
 
+	// Return User's Library Books
+	public static ArrayList<Integer[]> returnUserBooksId(int user_id) {
+		ArrayList<Integer[]> userBooksId = new ArrayList<Integer[]>();
+		String query = "SELECT book_id, readed FROM usersbooks WHERE user_id=?";
+
+		try {
+			PreparedStatement stmt = Conn.conn.prepareStatement(query);
+
+			stmt.setInt(1, user_id);
+
+			ResultSet rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				Integer[] book = new Integer[] { rs.getInt("book_id"), rs.getInt("readed") };
+				userBooksId.add(book);
+			}
+		} catch (SQLException sqle) {
+			System.out.println("RETURN ALL BOOKS FROM USER LIBRARY QUERY ERROR: " + sqle);
+		}
+
+		return userBooksId;
+	}
+
 	// - USER METHODS
 
 	// BOOK METHODS -

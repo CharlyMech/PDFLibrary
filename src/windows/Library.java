@@ -31,7 +31,7 @@ import items.BookRow;
 
 public class Library extends JFrame implements MouseListener, MouseMotionListener {
 	// ATTRIBUTES
-	protected static int userId;
+	public static int userId;
 	public static ArrayList<JFrame> openedWindows = new ArrayList<JFrame>();
 	public static int nBooksWindows = 0; // Count opened books windows -> max 5
 	private JPanel topBar = new JPanel(); // Top Bar Panel -> Contains close button and Mouse Motion Listener to move window
@@ -74,7 +74,6 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 
 		// Add JFrame to Array
 		Library.openedWindows.add(this);
-
 		// Window -
 		this.setLayout(null); // No Layout Manager
 		this.setSize(1200, 800); // WIDTH - HEIGHT
@@ -311,11 +310,36 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		this.setVisible(true);
 	}
 
+	// Logout method
 	protected static void logout() {
 		for (JFrame j : Library.openedWindows) {
 			j.dispose();
 		}
-		Conn.closeConnection();
+	}
+
+	// Add to User's Library method
+	public static boolean checkBoxClick(int book_id, boolean checkState) {
+		int userTier = (int) Query.returnUserInfo(Library.userId).get(4);
+		int bookTier = (int) Query.returnBookTier(book_id).get(0);
+
+		// Compare book&user tier
+		if (userTier >= bookTier) { // User can access the book
+			if (checkState) { // Already added
+				Query.removeBookFromUserLibrary(Library.userId, book_id);
+
+				return true;
+			} else { // Not added
+				Query.addBookToUserLibrary(Library.userId, book_id);
+
+				return false;
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, "Your tier does not allow you to add this book", "Add Book Error",
+					JOptionPane.ERROR_MESSAGE);
+
+			return false;
+		}
+
 	}
 
 	// MOUSE LISTENER Methods

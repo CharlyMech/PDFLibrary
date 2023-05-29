@@ -1,5 +1,6 @@
 package database;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -160,6 +161,62 @@ public class Query {
 			return false;
 		}
 
+	}
+
+	// Check if Book is already in User's Library
+	public static boolean checkIfBookInLibrary(int user_id, int book_id) {
+		String query = "SELECT * FROM usersbooks WHERE user_id=? AND book_id=?";
+
+		try {
+			PreparedStatement stmt = Conn.conn.prepareStatement(query);
+
+			stmt.setInt(1, user_id);
+			stmt.setInt(2, book_id);
+
+			ResultSet rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				if (rs.next() == false) { // Empty case
+					return false;
+				}
+			}
+			return true; // Alredy in User's Libray case
+		} catch (SQLException sqle) {
+			System.out.println("CHECK IF BOOK IS ALREDY IN USERS LIBRARY QUERY ERROR: " + sqle);
+			return false;
+		}
+	}
+
+	// Add Book to User's Library
+	public static void addBookToUserLibrary(int user_id, int book_id) {
+		String query = "INSERT INTO usersbooks (user_id, book_id) VALUES (?, ?)";
+
+		try {
+			PreparedStatement stmt = Conn.conn.prepareStatement(query);
+
+			stmt.setInt(1, user_id);
+			stmt.setInt(2, book_id);
+
+			stmt.executeUpdate();
+		} catch (SQLException sqle) {
+			System.out.println("ADD BOOK TO USER LIBRARY QUERY ERROR: " + sqle);
+		}
+	}
+
+	// Remove Book from User's Library
+	public static void removeBookFromUserLibrary(int user_id, int book_id) {
+		String query = "DELETE FROM usersbooks WHERE user_id=? AND book_id=?";
+
+		try {
+			PreparedStatement stmt = Conn.conn.prepareStatement(query);
+
+			stmt.setInt(1, user_id);
+			stmt.setInt(2, book_id);
+
+			stmt.executeUpdate();
+		} catch (SQLException sqle) {
+			System.out.println("REMOVE BOOK FROM USER LIBRARY QUERY ERROR: " + sqle);
+		}
 	}
 
 	// - USER METHODS

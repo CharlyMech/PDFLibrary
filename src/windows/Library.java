@@ -24,7 +24,6 @@ import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
-import database.Conn;
 import database.Query;
 import items.BookCover;
 import items.BookRow;
@@ -287,7 +286,8 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		ArrayList<Integer> booksList = Query.returnAllBooksId();
 		int y = 0; // For Y axis coordinate
 		for (Integer b : booksList) {
-			insidePanel.add(new BookRow(10, y, b).createMainRow());
+			BookRow bRow = new BookRow(10, y, b);
+			insidePanel.add(bRow.createMainRow()); // TODO -> Refresh if the books is added in Book Window and viceversa
 			y += 50;
 		}
 

@@ -229,7 +229,7 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		this.sliderPanel.add(myLibraryShadow);
 
 		// RANDOM BOOK PANEL - 
-		this.random = new BookCover(40, 100, 320, 400, Query.returnRandomBookId());
+		this.random = new BookCover(40, 100, 320, 400, Query.returnRandomBookId(), 1);
 		this.randomPanel = random.createCover();
 		this.randomPanel.addMouseListener(this);
 		this.sliderPanel.add(randomPanel);
@@ -425,7 +425,7 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		if (e.getSource() == this.randomBook) {
 			this.random = null;
 			this.sliderPanel.remove(this.randomPanel);
-			this.random = new BookCover(40, 100, 320, 400, Query.returnRandomBookId());
+			this.random = new BookCover(40, 100, 320, 400, Query.returnRandomBookId(), 1);
 			this.randomPanel = random.createCover();
 			this.randomPanel.addMouseListener(this);
 			this.sliderPanel.add(randomPanel);

@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 
 import database.Query;
 import windows.Library;
+import windows.MyLibrary;
 
 public class BookCover implements MouseListener, ActionListener {
 	// ATTRIBUTES
@@ -26,17 +27,19 @@ public class BookCover implements MouseListener, ActionListener {
 	private int pWidth;
 	private int pHeight;
 	private int book_id;
+	private int type;
 	private JLabel bookCover;
 	private JLabel tier;
 	private JCheckBox checkAdded;
 
 	// CONSTRUCTORS
-	public BookCover(int x, int y, int pWidth, int pHeight, int book_id) {
+	public BookCover(int x, int y, int pWidth, int pHeight, int book_id, int type) {
 		this.x = x;
 		this.y = y;
 		this.pWidth = pWidth;
 		this.pHeight = pHeight;
 		this.book_id = book_id;
+		this.type = type;
 	}
 
 	public BookCover(int book_id) {
@@ -84,26 +87,16 @@ public class BookCover implements MouseListener, ActionListener {
 		this.tier.setBounds(20, 345, 35, 35);
 		bookCoverPanel.add(tier);
 
-		// TODO -> Query if book is added to User's Library
-		// ! Again scale is now only for Book object
-		ImageIcon addFalse = new ImageIcon(
-				new ImageIcon("icons/LIGHT/add_false.png").getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
-		ImageIcon addTrue = new ImageIcon(
-				new ImageIcon("icons/LIGHT/add_true.png").getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
-		this.checkAdded = new JCheckBox();
-		this.checkAdded.setBackground(new Color(0, 0, 0, 0));
-		// Set default icon for checkbox
-		this.checkAdded.setIcon(addFalse); //! Dafault until DB query
-		// Set selected icon when checkbox state is selected
-		this.checkAdded.setSelectedIcon(addTrue);
-		this.checkAdded.addActionListener(this);
-		// Check if the Book is alredy in User's Library
-		boolean state = Query.checkIfBookInLibrary(Library.userId, this.book_id);
-		this.checkAdded.setSelected(!state);
-
-		// this.notAdded = new JLabel(new ImageIcon("icons/LIGHT/add_false.png"));
-		this.checkAdded.setBounds(15, 20, 45, 35);
-		bookCoverPanel.add(this.checkAdded);
+		// Check case: 1->Add Book ; 2-> Read Book
+		switch (this.type) {
+			case 1:
+			default:
+				this.addCheckBoxAdd(bookCoverPanel);
+				break;
+			case 2:
+				this.addCheckBoxRead(bookCoverPanel);
+				break;
+		}
 
 		bookCoverPanel.add(createImageFromUrl(this.book_id));
 		bookCoverPanel.add(bookCover);
@@ -121,10 +114,55 @@ public class BookCover implements MouseListener, ActionListener {
 
 			coverLabel.setIcon(coverIcon);
 		} catch (Exception e) {
-			System.out.println(e);
 		}
 
 		return coverLabel;
+	}
+
+	// Add CheckBox for Add Book
+	private void addCheckBoxAdd(JPanel cover) {
+		ImageIcon addFalse = new ImageIcon(
+				new ImageIcon("icons/LIGHT/add_false.png").getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
+		ImageIcon addTrue = new ImageIcon(
+				new ImageIcon("icons/LIGHT/add_true.png").getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
+		this.checkAdded = new JCheckBox();
+		this.checkAdded.setBackground(new Color(0, 0, 0, 0));
+		// Set default icon for checkbox
+		this.checkAdded.setIcon(addFalse);
+		// Set selected icon when checkbox state is selected
+		this.checkAdded.setSelectedIcon(addTrue);
+		this.checkAdded.addActionListener(this);
+		// Check if the Book is alredy in User's Library
+		boolean state = Query.checkIfBookInLibrary(Library.userId, this.book_id);
+		this.checkAdded.setSelected(!state);
+
+		this.checkAdded.setBounds(15, 20, 45, 35);
+		cover.add(this.checkAdded);
+	}
+
+	// Add CheckBox for Read Book
+	private void addCheckBoxRead(JPanel cover) {
+		ImageIcon notRead = new ImageIcon(
+				new ImageIcon("icons/bookmark_not_read.png").getImage().getScaledInstance(40, 60, Image.SCALE_DEFAULT));
+		ImageIcon read = new ImageIcon(
+				new ImageIcon("icons/bookmark_read.png").getImage().getScaledInstance(40, 60, Image.SCALE_DEFAULT));
+		this.checkAdded = new JCheckBox();
+		this.checkAdded.setBackground(new Color(0, 0, 0, 0));
+		// Set default icon for checkbox
+		this.checkAdded.setIcon(notRead);
+		// Set selected icon when checkbox state is selected
+		this.checkAdded.setSelectedIcon(read);
+		this.checkAdded.addActionListener(this);
+		// Check if the Book is alredy in User's Library
+		int isRead = Query.checkIfRead(Library.userId, this.book_id);
+		if (isRead == 0) { // Not read case
+			this.checkAdded.setSelected(false);
+		} else { // Read case
+			this.checkAdded.setSelected(true);
+		}
+
+		this.checkAdded.setBounds(this.pWidth - 55, 0, 45, 60);
+		cover.add(this.checkAdded);
 	}
 
 	// GETTER - BookID
@@ -158,8 +196,15 @@ public class BookCover implements MouseListener, ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == this.checkAdded) {
-			boolean newState = Library.checkBoxClick(this.book_id, !this.checkAdded.isSelected());
-			this.checkAdded.setSelected(!newState);
+			if (this.type == 1) {
+				boolean newState = Library.checkBoxClick(this.book_id, !this.checkAdded.isSelected());
+				this.checkAdded.setSelected(!newState);
+			} else {
+				int stateInt = this.checkAdded.isSelected() ? 1 : 0;
+				boolean newState = MyLibrary.changeReadStatus(Library.userId, this.book_id, stateInt);
+				this.checkAdded.setSelected(newState);
+			}
+
 		}
 	}
 }

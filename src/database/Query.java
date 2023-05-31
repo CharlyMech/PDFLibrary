@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
+
 public class Query {
 	// USER METHODS -
 
@@ -169,7 +171,6 @@ public class Query {
 
 		try {
 			PreparedStatement stmt = Conn.conn.prepareStatement(query);
-
 			stmt.setInt(1, user_id);
 			stmt.setInt(2, book_id);
 
@@ -187,6 +188,28 @@ public class Query {
 		}
 	}
 
+	// Check if Book is Read
+	public static int checkIfRead(int user_id, int book_id) {
+		int read = 0;
+		String query = "SELECT readed FROM usersbooks WHERE user_id=? AND book_id=?";
+
+		try {
+			PreparedStatement stmt = Conn.conn.prepareStatement(query);
+			stmt.setInt(1, user_id);
+			stmt.setInt(2, book_id);
+
+			ResultSet rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				read = rs.getInt("readed");
+			}
+		} catch (SQLException sqle) {
+			System.out.println("CHECK IF BOOK IS READ QUERY ERROR: " + sqle);
+		}
+
+		return read;
+	}
+
 	// Add Book to User's Library
 	public static void addBookToUserLibrary(int user_id, int book_id) {
 		String query = "INSERT INTO usersbooks (user_id, book_id) VALUES (?, ?)";
@@ -200,6 +223,22 @@ public class Query {
 			stmt.executeUpdate();
 		} catch (SQLException sqle) {
 			System.out.println("ADD BOOK TO USER LIBRARY QUERY ERROR: " + sqle);
+		}
+	}
+
+	// Change Read Book
+	public static void setBookReadStatus(int user_id, int book_id, int state) {
+		String query = "UPDATE usersbooks SET readed=? WHERE user_id=? AND book_id=?";
+
+		try {
+			PreparedStatement stmt = Conn.conn.prepareStatement(query);
+			stmt.setInt(1, state);
+			stmt.setInt(2, user_id);
+			stmt.setInt(3, book_id);
+
+			stmt.executeUpdate();
+		} catch (SQLException sqle) {
+			System.out.println("SET BOOK READ STATUS QUERY ERROR" + sqle);
 		}
 	}
 

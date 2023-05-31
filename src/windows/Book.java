@@ -123,7 +123,7 @@ public class Book extends JFrame implements MouseListener, MouseMotionListener, 
 		main.add(authorLabel);
 
 		// BookCover Object
-		BookCover bCover = new BookCover(75, 200, 320, 400, this.bookId);
+		BookCover bCover = new BookCover(75, 200, 320, 400, this.bookId, 1);
 		main.add(bCover.createCover());
 
 		// Summary

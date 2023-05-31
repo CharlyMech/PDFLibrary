@@ -192,7 +192,7 @@ public class MyLibrary extends JFrame implements MouseListener, MouseMotionListe
 			bookCoverPanel.setBounds(x, y, width, height);
 			bookCoverPanel.setBackground(new Color(0, 0, 0, 0));
 
-			bookCoverPanel.add(new BookCover(20, 15, width - 45, height - 30, b[0]).createCover());
+			bookCoverPanel.add(new BookCover(20, 15, width - 45, height - 30, b[0], 2).createCover());
 
 			userBooks.add(bookCoverPanel);
 
@@ -235,6 +235,18 @@ public class MyLibrary extends JFrame implements MouseListener, MouseMotionListe
 		// Set Window Visible
 		this.setVisible(true);
 
+	}
+
+	// Change Book Read status
+	public static boolean changeReadStatus(int user_id, int book_id, int status) {
+
+		Query.setBookReadStatus(user_id, book_id, status);
+
+		if (status == 1) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	// MOUSE LISTENER Methods

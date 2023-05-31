@@ -48,7 +48,6 @@ public class Book extends JFrame implements MouseListener, MouseMotionListener, 
 		String lang = bookInfo.get(4).toString();
 		String summary = bookInfo.get(5).toString();
 		int pages = (int) bookInfo.get(6);
-		int tier = (int) bookInfo.get(7);
 
 		// Window -
 		this.setLayout(null); // No Layout Manager

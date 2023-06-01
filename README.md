@@ -81,6 +81,7 @@ MySQL Server service on [Ubuntu 22.04](https://releases.ubuntu.com/jammy/) serve
 ## :arrows_clockwise: Pendent work to-do & upgrades
 
 -  [ ] Window abstraction
+-  [ ] TaskBar logo -> need to change icon size
 -  [ ] Data insertion (full)
 -  [x] Window drag offset bug
 -  [ ] Book add while Library & Book windows are opened (update simultaneously)

@@ -82,7 +82,7 @@ MySQL Server service on [Ubuntu 22.04](https://releases.ubuntu.com/jammy/) serve
 
 -  [ ] Window abstraction
 -  [ ] Data insertion (full)
--  [ ] Window drag offset bug
+-  [x] Window drag offset bug
 -  [ ] Book add while Library & Book windows are opened (update simultaneously)
 -  [ ] Multi-threading: execution is slow now
 -  [ ] Keyboard tabulation through JTextFields

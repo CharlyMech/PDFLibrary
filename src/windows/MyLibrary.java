@@ -450,7 +450,7 @@ public class MyLibrary extends JFrame implements MouseListener, MouseMotionListe
 
 		int x = e.getXOnScreen();
 		int y = e.getYOnScreen();
-		this.setLocation(x - this.xMouse, y + this.yMouse); // TODO It's a little offset, but works for now 
+		this.setLocation(x - this.xMouse, y - this.yMouse);
 	}
 
 	@Override

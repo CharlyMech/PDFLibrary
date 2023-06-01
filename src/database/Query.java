@@ -301,24 +301,6 @@ public class Query {
 		return bookId;
 	}
 
-	// Return coun tof books -> JScrollPane scroll size
-	public static int returnCountAllBooks() {
-		String query = "SELECT COUNT(book_id) AS count FROM books";
-		int count = -1;
-		try {
-			Statement stmt = Conn.conn.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
-
-			while (rs.next()) {
-				count = rs.getInt("count");
-			}
-		} catch (SQLException sqle) {
-			System.out.println("COUNT ALL BOOKS QUERY ERROR: " + sqle);
-		}
-
-		return count;
-	}
-
 	// Return info about book, tier and book for BookRow object
 	public static ArrayList<Object> returnBookTier(int book_id) {
 		ArrayList<Object> bookInfo = new ArrayList<>();
@@ -341,9 +323,8 @@ public class Query {
 	}
 
 	// Return all book_id to create every BookRow
-	public static ArrayList<Integer> returnAllBooksId() {
+	public static ArrayList<Integer> returnBooksId(String query) {
 		ArrayList<Integer> booksList = new ArrayList<>();
-		String query = "SELECT book_id FROM books ORDER BY RAND()";
 		try {
 			Statement stmt = Conn.conn.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
@@ -352,7 +333,7 @@ public class Query {
 				booksList.add(rs.getInt("book_id"));
 			}
 		} catch (SQLException sqle) {
-			System.out.println("ALL BOOKS ID QUERY ERROR: " + sqle);
+			System.out.println("BOOKS ID QUERY ERROR: " + sqle);
 		}
 
 		return booksList;

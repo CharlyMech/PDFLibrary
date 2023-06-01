@@ -9,6 +9,7 @@ import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -28,7 +29,7 @@ import database.Query;
 import items.BookCover;
 import items.BookRow;
 
-public class Library extends JFrame implements MouseListener, MouseMotionListener {
+public class Library extends JFrame implements MouseListener, MouseMotionListener, SearchEngine {
 	// ATTRIBUTES
 	public static int userId;
 	public static ArrayList<JFrame> openedWindows = new ArrayList<JFrame>();
@@ -62,6 +63,7 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 	private JPanel sliderPanel;
 	private ImageIcon randomBookIcon;
 	private ImageIcon randomBookIconPressed;
+	private JPanel insidePanel;
 	public static int bookWindow = 0; // Set 0 as default and 5 window max value
 	private int xMouse; // Get mouse X coordinate for mouse events
 	private int yMouse; // Get mouse Y coordinate for mouse events
@@ -257,11 +259,11 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		mainBooks.setBounds(10, 120, 790, 600);
 		mainBooks.setBackground(new Color(0, 0, 0, 0));
 
-		JPanel insidePanel = new JPanel(null);
-		insidePanel.setPreferredSize(new Dimension(770, Query.returnCountAllBooks() * 50));
-		insidePanel.setBackground(new Color(0, 0, 0, 0));
+		this.insidePanel = new JPanel(null);
+		this.insidePanel.setPreferredSize(new Dimension(770, 2500)); // Display only 50 books of 70 for now, displayed randomly
+		this.insidePanel.setBackground(new Color(0, 0, 0, 0));
 
-		JScrollPane scroller = new JScrollPane(insidePanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+		JScrollPane scroller = new JScrollPane(this.insidePanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroller.setBounds(0, 0, 790, 590);
 		scroller.setPreferredSize(new Dimension(790, 590));
@@ -283,13 +285,7 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 			}
 		}); // Scroller
 
-		ArrayList<Integer> booksList = Query.returnAllBooksId();
-		int y = 0; // For Y axis coordinate
-		for (Integer b : booksList) {
-			BookRow bRow = new BookRow(10, y, b);
-			insidePanel.add(bRow.createMainRow()); // TODO -> Refresh if the books is added in Book Window and viceversa
-			y += 50;
-		}
+		this.chargeBooksContent(0);
 
 		mainBooks.add(scroller);
 
@@ -308,6 +304,60 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 
 		// Set Window Visible
 		this.setVisible(true);
+	}
+
+	private void chargeBooksContent(int init) {
+		// Cases : init = 0 -> charge content in window startup
+		//			  init = 1 -> new content from last one
+		ArrayList<Integer> booksList = new ArrayList<Integer>();
+		int y = 0; // For Y axis coordinate
+		switch (init) {
+			case 0:
+			default:
+				String query = "SELECT book_id FROM books ORDER BY RAND() LIMIT 50"; // Select 50 book id to be displayed
+				booksList = Query.returnBooksId(query);
+				this.insidePanel.removeAll();
+				for (Integer b : booksList) {
+					BookRow bRow = new BookRow(10, y, b);
+					this.insidePanel.add(bRow.createMainRow()); // TODO -> Refresh if the books is added in Book Window and viceversa
+					y += 50;
+				}
+				this.insidePanel.revalidate();
+				this.insidePanel.repaint();
+				this.repaint();
+				break;
+			case 1:
+				String userInput = this.search.getText();
+
+				// Check if the user left the default value: "Search"
+				if (userInput.equalsIgnoreCase("Search")) {
+					this.chargeBooksContent(0); // Just refresh page and warning user
+					JOptionPane.showMessageDialog(null,
+							"The search is not valid!\nYou must enter an input. Page has been refreshed",
+							"Input Value Error",
+							JOptionPane.WARNING_MESSAGE);
+
+					break;
+				}
+
+				booksList = getBooksEngine(String.valueOf(this.searchBy.getSelectedItem()), userInput);
+				int newSize = booksList.size() * 50;
+
+				this.insidePanel.setPreferredSize(new Dimension(770, newSize));
+				this.insidePanel.removeAll();
+
+				for (Integer b : booksList) {
+					BookRow bRow = new BookRow(10, y, b);
+					this.insidePanel.add(bRow.createMainRow()); // TODO -> Refresh if the books is added in Book Window and viceversa
+					y += 50;
+				}
+
+				this.insidePanel.revalidate();
+				this.insidePanel.repaint();
+				this.repaint();
+				break;
+		}
+
 	}
 
 	// Logout method
@@ -395,9 +445,8 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 		// TODO -> Implement click outside search bar (also on login&signin) return to placeholder styles
 
 		// Search Button Clicked -> Get Search By item filter
-		if (e.getSource() == this.searchButton) { // TEST
-			String searchFilter = String.valueOf(this.searchBy.getSelectedItem());
-			System.out.println(searchFilter);
+		if (e.getSource() == this.searchButton) {
+			this.chargeBooksContent(1);
 		}
 
 		// Click on MyLibrary button
@@ -699,6 +748,54 @@ public class Library extends JFrame implements MouseListener, MouseMotionListene
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+	}
+
+	@Override
+	public ArrayList<Integer> getBooksEngine(String filter, String input) {
+		ArrayList<Integer> books = new ArrayList<Integer>();
+		String query = "SELECT books.book_id FROM books ";
+
+		// Switch statement to execute different querys
+		// ? -> Since filters cannot be changed, switch is simple: maybe it's a good idea to create an Enum class, but displaying strings on JComboBox from Enum class is tedious xD
+		// "Title", "Category", "Author", "Year"
+		switch (filter) {
+			case "Title":
+			default: // Just in case
+			case "": // Just in case
+				query += "WHERE LOWER(books.title) LIKE '%" + input.toLowerCase() + "%'";
+				break;
+			case "Category":
+				// Since I need a JOIN, overwrite query variable
+				query = "SELECT bookscats.book_id FROM bookscats JOIN categories ON bookscats.cat_id=categories.cat_id WHERE LOWER(categories.cat_name) LIKE '%"
+						+ input.toLowerCase() + "%'";
+				break;
+			case "Author":
+				// Since I need a JOIN, overwrite query variable
+				query += "JOIN authors ON books.author_id=authors.author_id WHERE LOWER(authors.author_name) LIKE '%"
+						+ input + "%'";
+				break;
+			case "Year":
+				try { // Check if the user puts a number (Int) if the filter is set to Year
+					Integer yearInt = Integer.parseInt(input);
+
+					query += "WHERE books.pub_year=" + yearInt;
+				} catch (NumberFormatException nex) {
+					System.out.println("Not a number!: " + nex);
+					JOptionPane.showMessageDialog(null, "Input value not valid!\nYear input must be a number (integer)",
+							"Year Input Value Error",
+							JOptionPane.ERROR_MESSAGE);
+
+					return books; // Empty list
+				}
+				break;
+		}
+
+		query += " ORDER BY RAND()";
+
+		// Call the Query method
+		books = Query.returnBooksId(query);
+
+		return books;
 	}
 
 }

@@ -51,3 +51,7 @@ All designs have been made with [Figma](https://www.figma.com/).
 ### Edit User Info
 
 ![Edit User Information Window](EditUser.png)
+
+## Note
+
+As you can see, the final result is pretty close to the one designed on Figma, although the logo has changed. The main reason why I changed it is because I could auto-download the files so I decided to modify the app concept and be kind a To-Do app for books. 

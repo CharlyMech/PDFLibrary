@@ -13,8 +13,7 @@ public class App {
         Conn conn = new Conn();
 
         if (conn.connectionValid()) {
-            // new Login();
-            new Library(2);
+            new Login();
         }
     }
 

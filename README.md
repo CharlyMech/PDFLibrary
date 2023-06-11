@@ -84,6 +84,7 @@ MySQL Server service on [Ubuntu 22.04](https://releases.ubuntu.com/jammy/) serve
 -  [ ] TaskBar logo -> need to change icon size
 -  [ ] Data insertion (full)
 -  [x] Window drag offset bug
+-  [ ] JOptionPane for secure app closing and Logout
 -  [ ] Book add while Library & Book windows are opened (update simultaneously)
 -  [ ] Multi-threading: execution is slow now
 -  [ ] Keyboard tabulation through JTextFields

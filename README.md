@@ -68,6 +68,8 @@ MySQL Server service on [Ubuntu 22.04](https://releases.ubuntu.com/jammy/) serve
 
 [GUI designs](documentation/WindowsDesigns/README.md) designed with Figma <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" style="width:1em;"/>
 
+### :clapper: Link to Prezi Presentation: [Prezzi Presentation](https://prezi.com/view/AhX9hpljFVtD3XgouYMK/)
+
 ### :red_circle: Current application limitations
 
 -  Books available: 70 -> Future implementation for more books (see [get_books repository](https://github.com/CharlyMech/get_books_PDFLibrary))
